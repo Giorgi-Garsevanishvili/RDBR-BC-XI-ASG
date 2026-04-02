@@ -1,26 +1,170 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --background: #F5F5F5;
+  --color-brand-50: #eeedfc;
+  --color-brand-100: #dddbfa;
+  --color-brand-200: #b7b3f4;
+  --color-brand-300: #958fef;
+  --color-brand-400: #736bea;
+  --color-brand-500: #4f46e5;
+  --color-brand-600: #281ed2;
+  --color-brand-700: #1e169d;
+  --color-brand-800: #130e67;
+  --color-brand-900: #0a0836;
+  --color-brand-950: #05041b;
+
+  --color-grayscale-50: #ffffff;
+  --color-grayscale-100: #f5f5f5;
+  --color-grayscale-200: #d1d1d1;
+  --color-grayscale-300: #adadad;
+  --color-grayscale-400: #8a8a8a;
+  --color-grayscale-500: #666666;
+  --color-grayscale-600: #525252;
+  --color-grayscale-700: ##3d3d3d;
+  --color-grayscale-800: #292929;
+  --color-grayscale-900: #141414;
+  --color-grayscale-950: #0a0a0a;
+
+  --color-error: #f4161a;
+  --color-error-light: #f66466;
+  --color-warning: #f4a316;
+  --color-success: #1dc31d;
+  --color-success-light: #1dc31d1a;
+
+  --font-size-display: 48px;
+  --font-size-h1: 40px;
+  --font-size-h2: 32px;
+  --font-size-h3: 24px;
+  --font-size-h4: 20px;
+  --font-size-h5: 16px;
+  --font-size-body-xl-light: 24px;
+  --font-size-body-xl: 24px;
+  --font-size-body-lg: 20px;
+  --font-size-body-md: 18px;
+  --font-size-body-md-regular: 18px;
+  --font-size-body-sm: 16px;
+  --font-size-body-xs: 14px;
+  --font-size-helper-md: 12px;
+  --font-size-helper-md-regular: 14px;
+  --font-size-helper-s-regular: 12px;
+  --font-size-helper-xs-regular: 10px;
+  --font-size-button-md: 20px;
+  --font-size-button-sm: 16px;
+  --font-size-underlined-md: 20px;
+  --font-size-underlined-sm: 14px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .text-display {
+    font-size: var(--font-size-display);
+    font-weight: 700;
+    line-height: auto;
+  }
+  .text-h1 {
+    font-size: var(--font-size-h1);
+    font-weight: 600;
+    line-height: auto;
+  }
+  .text-h2 {
+    font-size: var(--font-size-h2);
+    font-weight: 600;
+    line-height: auto;
+  }
+  .text-h3 {
+    font-size: var(--font-size-h3);
+    font-weight: 600;
+    line-height: auto;
+  }
+  .text-h4 {
+    font-size: var(--font-size-h4);
+    font-weight: 600;
+    line-height: 24px;
+  }
+  .text-h5 {
+    font-size: var(--font-size-h5);
+    font-weight: 600;
+    line-height: auto;
+  }
+  .text-body-xl-light {
+    font-size: var(--font-size-body-xl-light);
+    font-weight: 300;
+    line-height: auto;
+  }
+  .text-body-xl {
+    font-size: var(--font-size-body-xl);
+    font-weight: 500;
+    line-height: auto;
+  }
+  .text-body-lg {
+    font-size: var(--font-size-body-lg);
+    font-weight: 500;
+    line-height: auto;
+  }
+  .text-body-md {
+    font-size: var(--font-size-body-md);
+    font-weight: 500;
+    line-height: auto;
+  }
+  .text-body-md-regular {
+    font-size: var(--font-size-body-md-regular);
+    font-weight: 400;
+    line-height: auto;
+  }
+  .text-body-sm {
+    font-size: var(--font-size-body-sm);
+    font-weight: 500;
+    line-height: auto;
+  }
+  .text-body-xs {
+    font-size: var(--font-size-body-xs);
+    font-weight: 500;
+    line-height: auto;
+  }
+  .text-helper-md {
+    font-size: var(--font-size-helper-md);
+    font-weight: 500;
+    line-height: auto;
+  }
+  .text-helper-md-regular {
+    font-size: var(--font-size-helper-md-regular);
+    font-weight: 400;
+    line-height: auto;
+  }
+  .text-helper-s-regular {
+    font-size: var(--font-size-helper-s-regular);
+    font-weight: 400;
+    line-height: auto;
+  }
+  .text-helper-xs-regular {
+    font-size: var(--font-size-helper-xs-regular);
+    font-weight: 400;
+    line-height: auto;
+  }
+  .text-button-md {
+    font-size: var(--font-size-button-md);
+    font-weight: 500;
+    line-height: auto;
+  }
+  .text-button-sm {
+    font-size: var(--font-size-button-sm);
+    font-weight: 500;
+    line-height: 24px;
+  }
+  .text-underlined-md {
+    font-size: var(--font-size-underlined-md);
+    font-weight: 500;
+    text-decoration: underline;
+    line-height: auto;
+  }
+  .text-underlined-sm {
+    font-size: var(--font-size-underlined-sm);
+    font-weight: 500;
+    text-decoration: underline;
+    line-height: auto;
   }
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
