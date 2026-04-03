@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --background: #F5F5F5;
+  --background: #f5f5f5;
   --color-brand-50: #eeedfc;
   --color-brand-100: #dddbfa;
   --color-brand-200: #b7b3f4;
@@ -56,6 +56,15 @@
 }
 
 @layer components {
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .text-display {
     font-size: var(--font-size-display);
     font-weight: 700;
@@ -167,4 +176,7 @@
 
 body {
   background: var(--background);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
