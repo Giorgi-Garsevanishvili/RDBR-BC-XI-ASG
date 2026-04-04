@@ -9,7 +9,7 @@ function NavbarComp() {
   return (
     <header className="flex w-480 gap-2.5 bg-grayscale-100 border-b border-grayscale-200 px-44.25 py-6 shadow-[0px_0px_11.7px_0px_#0000000A]">
       <div className="flex w-full h-15 justify-between items-center">
-        <NavIconLogo />
+        <NavIconLogo position="header" />
         <div className=" h-14 gap-9 flex">
           <div className="flex text-grayscale-600  gap-2">
             <div className="flex rounded-lg p-3.75 gap-2">

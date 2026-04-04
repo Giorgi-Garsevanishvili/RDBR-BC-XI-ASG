@@ -1,17 +1,21 @@
+import Image from "next/image";
 import NavIconLogo from "../ui/NavIconLogo";
-import SocialMedia from "../ui/SocialMedia";
-import Link from "next/link";
+import FacebookIcon from "../../public/Facebook.svg";
+import TwitterIcon from "../../public/Twitter.svg";
+import InstagramIcon from "../../public/Instagram.svg";
+import LinkedinIcon from "../../public/LinkedIn.svg";
+import YoutubeIcon from "../../public/YouTube.svg";
 
 function Footer() {
   return (
-    <footer className="w-full mx-auto border-t flex justify-center items-center flex-col border-grayscale-200">
-      <div className=" w-391.5 border-t border-[#F5F5F5]" />
+    <footer className="w-full  border-t flex justify-center items-center flex-col border-grayscale-200">
+      <div className=" w-391.5  border-t border-[#F5F5F5]" />
       <div className="pb-5 pt-20 gap-18.5 w-391.5 flex flex-col">
         <div className="flex justify-between">
-          <div className="gap-6 flex flex-col  w-[310px]">
+          <div className="gap-6 flex flex-col  w-77.5">
             <div className="flex flex-col gap-4">
               <div className="gap-3 flex items-center">
-                <NavIconLogo className="w-11.25 h-11.25" />
+                <NavIconLogo position="footer" />
                 <h3 className="text-body-xl leading-7.25 text-[#130E67]">
                   Bootcamp
                 </h3>
@@ -22,34 +26,42 @@ function Footer() {
                 Browse courses to get started.
               </div>
             </div>
-            <div className="flex gap-5.5">
-              <SocialMedia />
+            <div className="flex items-center gap-5.5 w-44.25 h-4.75">
+              <Image src={FacebookIcon} alt="FacebookIcon" />
+              <Image src={TwitterIcon} alt="TwitterIcon" />
+              <Image src={InstagramIcon} alt="InstagramIcon" />
+              <Image src={LinkedinIcon} alt="LinkedinIcon" />
+              <Image src={YoutubeIcon} alt="YoutubeIcon" />
             </div>
           </div>
-          <div className="gap-30 flex ">
-            <div className="gap-4 flex flex-col">
-              <h4 className="text-[#130E67] leading-[24px]  text-h4 w-fit">Explore</h4>
-              <ul className="gap-2">
-                <li className="text-body-md-regular text-grayscale-500">
+          <div className="flex justify-between w-175">
+            <div className="gap-4 flex h-fit flex-col">
+              <h4 className="text-[#130E67] leading-6  text-h4 h-fit w-fit">
+                Explore
+              </h4>
+              <ul className="flex flex-col">
+                <li className="text-body-md-regular h-fit w-fit text-grayscale-500">
                   Enrolled Courses
                 </li>
-                <li className="text-body-md-regular text-grayscale-500">
+                <li className="text-body-md-regular h-fit w-fit  text-grayscale-500">
                   Browse Courses
                 </li>
               </ul>
             </div>
-            <div className="gap-4 flex flex-col">
-              <h4 className="text-[#130E67] leading-[24px]  text-h4 w-fit">Account</h4>
-              <ul className="gap-2">
-                <li className="text-body-md-regular text-grayscale-500">
+            <div className="gap-4 flex h-fit flex-col">
+              <h4 className="text-[#130E67]  text-h4 w-fit">Account</h4>
+              <ul className="flex flex-col">
+                <li className="text-body-md-regular  text-grayscale-500">
                   My Profile
                 </li>
               </ul>
             </div>
-            <div className="gap-4 flex flex-col">
-              <h4 className="text-[#130E67] leading-[24px]  text-h4 w-fit">Contact</h4>
+            <div className="gap-4 flex h-fit flex-col">
+              <h4 className="text-[#130E67] leading-6  text-h4 w-fit">
+                Contact
+              </h4>
               <ul className="flex flex-col justify-center gap-2.5 items-start">
-                <li className="text-body-md-regular flex justify-center gap-1.5 items-center text-grayscale-500">
+                <li className="text-body-md-regular leading-[22px] flex justify-center gap-x-1.5 items-center text-grayscale-500">
                   <svg
                     width="24"
                     height="24"
@@ -64,7 +76,7 @@ function Footer() {
                   </svg>
                   contact@company.com
                 </li>
-                <li className="text-body-md-regular flex justify-center gap-1.5 items-center text-grayscale-500">
+                <li className="text-body-md-regular leading-[22px] flex justify-center gap-x-1.5 items-center text-grayscale-500">
                   <svg
                     width="22"
                     height="22"
@@ -79,7 +91,7 @@ function Footer() {
                   </svg>
                   (+995) 555 111 222
                 </li>
-                <li className="text-body-md-regular flex justify-center gap-1.5 items-center text-grayscale-500">
+                <li className="text-body-md-regular leading-[22px] flex justify-center gap-x-1.5 items-center text-grayscale-500">
                   <svg
                     width="24"
                     height="24"
@@ -98,23 +110,17 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className=" text-grayscale-500 text-body-md-regular flex justify-between">
-          <p>Copyright © 2026 Redberry International</p>
-          <div className="flex">
-            <p>All Rights Reserved</p>
-
-            <span className="mx-1">|</span>
-
-            <Link className="text-[#4F46E5]" href="/">
-              Terms and Conditions
-            </Link>
-
-            <span className="mx-1">|</span>
-
-            <Link className="text-[#4F46E5]" href="/">
-              Privacy Policy
-            </Link>
-          </div>
+        <div className="flex justify-between h-5.5 text-body-md-regular text-[#666]">
+          <p className="flex grow items-center justify-start">
+            Copyright © 2026 Redberry International
+          </p>
+          <p className="flex grow items-center justify-end">
+            {" "}
+            All Rights Reserved <span className="mx-1.25">|</span>
+            <span className="text-[#4F46E5]">Terms and Conditions</span>{" "}
+            <span className="mx-1.25">|</span>
+            <span className="text-[#4F46E5]">Privacy Policy</span>
+          </p>
         </div>
       </div>
     </footer>
