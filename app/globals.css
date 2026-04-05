@@ -55,14 +55,32 @@
   --font-size-underlined-sm: 14px;
 }
 
+.swiper-pagination-bullet {
+  width: 120px; /* match your design */
+  height: 8px;
+  border-radius: 999px;
+  background: #c1bcbc80; /* inactive */
+  border-radius: 999px;
+  opacity: 0.5;
+  margin: 0 6px !important;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+/* active bullet */
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background: #ffffff; /* active */
+  opacity: 1;
+}
+
 @layer components {
-  .no-scrollbar {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
   }
 
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE, Edge */
+    scrollbar-width: none; /* Firefox */
   }
 
   .text-display {

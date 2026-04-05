@@ -16,15 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.className } overflow-hidden`}>
+    <html lang="en" className={`${inter.className} overflow-y-auto no-scrollbar`}>
       <body className="min-h-screen flex flex-col">
-        <NavbarComp />
-
-        <main className="flex-1 flex justify-center">
-          <div className=" mx-auto max-w-480">{children}</div>
+        <main className="flex-1 flex flex-col gap-16 justify-center">
+          <NavbarComp />
+          <div className="mx-auto max-w-480">{children}</div>
+          <Footer />
         </main>
-
-        <Footer />
       </body>
     </html>
   );
