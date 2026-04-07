@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavbarComp from "@/components/general/Navbar";
 import Footer from "@/components/general/Footer";
+import GeneralModal from "@/components/general/GeneralModal";
+import { ModalProvider } from "@/context/ModalContext";
+import { AuthProvider } from "@/context/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,12 +19,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.className} overflow-y-auto no-scrollbar`}>
+    <html lang="en" className={`${inter.className} no-scrollbar`}>
       <body className="min-h-screen flex flex-col">
         <main className="flex-1 flex flex-col gap-16 justify-center">
-          <NavbarComp />
-          <div className="mx-auto max-w-480">{children}</div>
-          <Footer />
+          <AuthProvider>
+            <ModalProvider>
+              <GeneralModal />
+              <NavbarComp />
+              <div className="mx-auto max-w-480">{children}</div>
+              <Footer />
+            </ModalProvider>
+          </AuthProvider>
         </main>
       </body>
     </html>

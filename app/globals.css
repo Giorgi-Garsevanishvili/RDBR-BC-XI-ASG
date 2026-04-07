@@ -21,7 +21,7 @@
   --color-grayscale-400: #8a8a8a;
   --color-grayscale-500: #666666;
   --color-grayscale-600: #525252;
-  --color-grayscale-700: ##3d3d3d;
+  --color-grayscale-700: #3d3d3d;
   --color-grayscale-800: #292929;
   --color-grayscale-900: #141414;
   --color-grayscale-950: #0a0a0a;
@@ -55,23 +55,70 @@
   --font-size-underlined-sm: 14px;
 }
 
-.swiper-pagination-bullet {
-  width: 120px; /* match your design */
+/* position pagination */
+.swiper-pagination {
+  position: relative !important;
+  display: block !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transform: translateX(-50%);
+  width: 1250px;
   height: 8px;
-  border-radius: 999px;
-  background: #c1bcbc80; /* inactive */
-  border-radius: 999px;
-  opacity: 0.5;
-  margin: 0 6px !important;
-  cursor: pointer;
-  transition: all 0.3s;
+  gap: 12px;
 }
 
-/* active bullet */
-.swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background: #ffffff; /* active */
+/* inactive */
+.swiper .swiper-pagination-bullet {
+  display: inline-flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  width: 57px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(193, 188, 188, 0.5);
   opacity: 1;
 }
+
+/* active */
+.swiper .swiper-pagination-bullet-active {
+  background: #ffffff;
+}
+
+.swiper-wrapper {
+  transition-timing-function: ease-out;
+}
+
+.cta_Button_Default {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4f46e5;
+  border-radius: 8px;
+  padding: 17px 25px;
+  gap: 10px;
+  cursor: pointer;
+  color: white;
+  animation: ease-out;
+  animation-duration: 300ms;
+  cursor: pointer;
+  
+}
+
+.cta_Button_Outlined {
+  background-color: transparent; /* override default */
+  border: 2px solid #958fef;
+  border-radius: 8px;
+  color: #4f46e5;
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.cta_Button_Outlined:hover {
+  background-color: #4f46e5;
+  color: white;
+}
+
 
 @layer components {
   .no-scrollbar::-webkit-scrollbar {
@@ -86,22 +133,22 @@
   .text-display {
     font-size: var(--font-size-display);
     font-weight: 700;
-    line-height: auto;
+    line-height: normal;
   }
   .text-h1 {
     font-size: var(--font-size-h1);
     font-weight: 600;
-    line-height: auto;
+    line-height: normal;
   }
   .text-h2 {
     font-size: var(--font-size-h2);
     font-weight: 600;
-    line-height: auto;
+    line-height: normal;
   }
   .text-h3 {
     font-size: var(--font-size-h3);
     font-weight: 600;
-    line-height: auto;
+    line-height: normal;
   }
   .text-h4 {
     font-size: var(--font-size-h4);
@@ -111,67 +158,67 @@
   .text-h5 {
     font-size: var(--font-size-h5);
     font-weight: 600;
-    line-height: auto;
+    line-height: normal;
   }
   .text-body-xl-light {
     font-size: var(--font-size-body-xl-light);
     font-weight: 300;
-    line-height: auto;
+    line-height: normal;
   }
   .text-body-xl {
     font-size: var(--font-size-body-xl);
     font-weight: 500;
-    line-height: auto;
+    line-height: normal;
   }
   .text-body-lg {
     font-size: var(--font-size-body-lg);
     font-weight: 500;
-    line-height: auto;
+    line-height: normal;
   }
   .text-body-md {
     font-size: var(--font-size-body-md);
     font-weight: 500;
-    line-height: auto;
+    line-height: normal;
   }
   .text-body-md-regular {
     font-size: var(--font-size-body-md-regular);
     font-weight: 400;
-    line-height: auto;
+    line-height: normal;
   }
   .text-body-sm {
     font-size: var(--font-size-body-sm);
     font-weight: 500;
-    line-height: auto;
+    line-height: normal;
   }
   .text-body-xs {
     font-size: var(--font-size-body-xs);
     font-weight: 500;
-    line-height: auto;
+    line-height: normal;
   }
   .text-helper-md {
     font-size: var(--font-size-helper-md);
     font-weight: 500;
-    line-height: auto;
+    line-height: normal;
   }
   .text-helper-md-regular {
     font-size: var(--font-size-helper-md-regular);
     font-weight: 400;
-    line-height: auto;
+    line-height: normal;
   }
   .text-helper-s-regular {
     font-size: var(--font-size-helper-s-regular);
     font-weight: 400;
-    line-height: auto;
+    line-height: normal;
   }
   .text-helper-xs-regular {
     font-size: var(--font-size-helper-xs-regular);
     font-weight: 400;
-    line-height: auto;
+    line-height: normal;
   }
   .text-button-md {
     font-size: var(--font-size-button-md);
     font-weight: 500;
-    line-height: auto;
+    line-height: normal;
   }
   .text-button-sm {
     font-size: var(--font-size-button-sm);
@@ -182,17 +229,22 @@
     font-size: var(--font-size-underlined-md);
     font-weight: 500;
     text-decoration: underline;
-    line-height: auto;
+    line-height: normal;
   }
   .text-underlined-sm {
     font-size: var(--font-size-underlined-sm);
     font-weight: 500;
     text-decoration: underline;
-    line-height: auto;
+    line-height: normal;
   }
 }
 
+:root {
+  --font-primary: "Inter", sans-serif;
+}
+
 body {
+  font-family: var(--font-primary);
   background: var(--background);
   display: flex;
   flex-direction: column;

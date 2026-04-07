@@ -1,9 +1,10 @@
 import { BannerData, bannerData } from "@/staticData/bannerData";
 import Image from "next/image";
+import CTA_Button from "./CTA_Button";
 
 function Banner({ Data }: { Data: BannerData }) {
   return (
-    <div className=" w-full h-full relative p-12 gap-3 overflow-hidden  rounded-[30px]">
+    <div className=" w-full h-full flex relative p-12 gap-3 overflow-hidden  rounded-[30px]">
       <Image
         loading="eager"
         src={Data.img}
@@ -12,14 +13,14 @@ function Banner({ Data }: { Data: BannerData }) {
         className="object-cover"
       />
 
-      <div className="absolute flex h-58 w-full flex-col justify-center gap-10 text-white">
-        <div className="gap-3 flex items-start w-[1470px] h-full justify-start flex-col">
-          <h1 className="text-display top-0 font-bold">{Data.title}</h1>
-          {Data.info && <p className="text-body-xl-light">{Data.info}</p>}
+      <div className="absolute flex flex-col justify-start items-start w-367.5 h-32  gap-10 text-white">
+        <div className="gap-3 flex w-full flex-col">
+          <h1 className="text-display w-367.5 h-14.5 ">{Data.title}</h1>
+          {Data.info && (
+            <p className="text-body-xl-light  w-304.5 h-14.5 ">{Data.info}</p>
+          )}
         </div>
-        <button className="bg-indigo-600 text-button-md px-6 py-3 rounded-lg w-fit">
-          {Data.buttonText}
-        </button>
+        < CTA_Button className="h-[64px] text-button-md" title={Data.buttonText}/>
       </div>
     </div>
   );

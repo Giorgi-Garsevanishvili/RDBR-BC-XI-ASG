@@ -4,9 +4,9 @@ import { bannerData } from "@/staticData/bannerData";
 
 export default function Home() {
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col overflow-y-hidden justify-center">
       <Carousel
-        className="w-[1566px] h-[420px] rounded-[30px] overflow-hidden"
+        className="w-[1566px] h-[420px] flex relative rounded-[30px] overflow-hidden"
         slides={bannerData.map((item, index) => (
           <Banner key={index} Data={item} />
         ))}
