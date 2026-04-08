@@ -9,11 +9,11 @@ function GeneralModal() {
 
   return (
     <div
-      className="fixed inset-0 z-[1000] bg-black/40 flex items-center justify-center"
+      className="fixed inset-0 z-1000 bg-[#00000040] flex items-center justify-center"
       onClick={closeModal} // click outside closes
     >
       <div
-        className="bg-white rounded-lg p-6 min-w-[300px]"
+        className="bg-white rounded-lg p-6 min-w-75"
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         {content || <p>Default Modal</p>}

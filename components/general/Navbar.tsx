@@ -10,6 +10,7 @@ import GeneralModal from "./GeneralModal";
 import { useEffect, useState } from "react";
 import { checkAuth } from "@/lib/checkAuth";
 import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 type Status = {
   logged: boolean;
@@ -29,7 +30,9 @@ function NavbarComp() {
   return (
     <header className="flex gap-2.5 bg-grayscale-100 border-b border-grayscale-200 px-44.25 py-6 shadow-[0px_0px_11.7px_0px_#0000000A]">
       <div className="flex w-full h-15 justify-between items-center">
-        <NavIconLogo position="header" />
+        <Link href={"/"} className="cursor-pointer">
+          <NavIconLogo position="header" />
+        </Link>
         <div className=" h-14 gap-9 flex">
           <div className="flex text-grayscale-600  gap-2">
             <NavBrowseCoursesButton />

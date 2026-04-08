@@ -5,9 +5,10 @@ import Input from "./Input";
 import { useModal } from "@/context/ModalContext";
 import z from "zod";
 import { LoginDataType, useAuth } from "@/context/AuthContext";
+import SignUpForm from "./SignUpForm";
 
 function LogIn() {
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
   const [formData, setFormData] = useState<LoginDataType>({
     email: "",
     password: "",
@@ -25,11 +26,19 @@ function LogIn() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("SUBMIT");
+
     const success = await signIn(formData);
 
     if (success) {
       closeModal();
     }
+  };
+
+  const handleModalSwitch = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    closeModal();
+    openModal(<SignUpForm />);
   };
 
   return (
@@ -38,6 +47,7 @@ function LogIn() {
       className="w-115 flex items-end relative justify-start flex-col rounded-xl p-12.5 bg-[#FFFFFF] gap-3"
     >
       <button
+        type="button"
         onClick={closeModal}
         className="cursor-pointer absolute flex top-0 right-0"
       >
@@ -47,11 +57,11 @@ function LogIn() {
         <div className=" flex flex-col w-full gap-4">
           <div className=" flex flex-col w-full gap-4">
             <div className=" flex flex-col gap-6">
-              <div className="flex flex-col gap-1.5">
-                <h2 className="text-h2 w-[360px] h-[39px] flex items-center justify-center text-[#141414]">
+              <div className="flex cursor-default flex-col gap-1.5">
+                <h2 className="text-h2 w-90 h-9.75 flex items-center justify-center text-grayscale-900">
                   Welcome Back
                 </h2>
-                <h2 className="text-body-xs w-[360px] h-[17px] flex items-center justify-center text-[#666666]">
+                <h2 className="text-body-xs w-90 h-4.25 flex items-center justify-center text-grayscale-500">
                   Log in to continue your learning
                 </h2>
               </div>
@@ -81,21 +91,25 @@ function LogIn() {
             />
           </div>
           <div className="flex flex-col items-center w-full justify-center gap-2">
-            <div className="w-[320px] h-[21px] flex items-center justify-center relative bg-[#FFFFFF]">
-              <div className="w-[28px] h-[21px] flex items-center bg-[#FFFFFF]  text-grayscale-400 absolute justify-center p-2.5 gap-2.5">
-                <p className="w-[14px] h-[24px] flex items-start justify-center text-body-xs ">
+            <div className="w-[320px] h-5.25 flex items-center justify-center relative bg-[#FFFFFF]">
+              <div className="w-7 h-5.25 flex cursor-default items-center bg-[#FFFFFF]  text-grayscale-400 absolute justify-center p-2.5 gap-2.5">
+                <p className="w-3.5 h-6 flex items-start justify-center text-body-xs ">
                   or
                 </p>
               </div>
               <div className="w-[320px] h-[0.52px] border-t flex  border-[#D1D1D1]  border"></div>
             </div>
-            <div className="px-[60px] flex items-center justify-center gap-2">
-              <p className="w-[133px] h-[15px] justify-center items-center flex text-grayscale-500 text-helper-s-regular">
+            <div className="px-15 flex items-center justify-center gap-2">
+              <p className="w-33.25 h-3.75 cursor-default justify-center items-center flex text-grayscale-500 text-helper-s-regular">
                 Don’t have an account?{" "}
               </p>
-              <p className="w-[53px] h-[17px] justify-center items-center text-underlined-sm  text-grayscale-900 text-body-xs">
+              <button
+                type="button"
+                onClick={(e) => handleModalSwitch(e)}
+                className="w-13.25 h-4.25 cursor-pointer justify-center items-center text-underlined-sm  text-grayscale-900 text-body-xs"
+              >
                 Sign Up{" "}
-              </p>
+              </button>
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ function NavAuthorizeComponent() {
           title="Log In"
         />
         <CTA_Button
+          type="button"
           action={() => openModal(<SignUpForm />)}
           className="h-[60px] text-button-md"
           title="Sign Up"

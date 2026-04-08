@@ -20,7 +20,11 @@ function Banner({ Data }: { Data: BannerData }) {
             <p className="text-body-xl-light  w-304.5 h-14.5 ">{Data.info}</p>
           )}
         </div>
-        < CTA_Button className="h-[64px] text-button-md" title={Data.buttonText}/>
+        <CTA_Button
+          type="button"
+          className="h-16 text-button-md"
+          title={Data.buttonText}
+        />
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ export default function Carousel({ slides, className }: CarouselProps) {
         spaceBetween={0}
         slidesPerView={1}
         speed={500}
-        loop={false}
+        loop={true}
         pagination={{
           clickable: true,
           el: ".swiper-pagination",

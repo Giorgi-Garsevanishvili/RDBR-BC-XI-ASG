@@ -21,12 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.className} no-scrollbar`}>
       <body className="min-h-screen flex flex-col">
-        <main className="flex-1 flex flex-col gap-16 justify-center">
+        <main className="flex-1 h-full flex flex-col gap-16 justify-center">
           <AuthProvider>
             <ModalProvider>
               <GeneralModal />
               <NavbarComp />
-              <div className="mx-auto max-w-480">{children}</div>
+              <div className="mx-auto grow h-full max-w-480">{children}</div>
               <Footer />
             </ModalProvider>
           </AuthProvider>

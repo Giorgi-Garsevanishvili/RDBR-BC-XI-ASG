@@ -23,8 +23,6 @@ function Input({
   const [typeDef, setTypeDef] = useState(type);
 
   const toggleEye = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
     if (typeDef === "password") {
       setTypeDef("text");
     } else {
@@ -36,16 +34,15 @@ function Input({
     <div className="gap-0.5 flex flex-col">
       <div className="gap-1.25 flex flex-col">
         <div className="gap-2 flex flex-col">
-          <label
-            className="text-body-xs text-[#3D3D3D] w-[360px] h-[17px]"
-            htmlFor={id}
-          >
-            {label}
+          <label htmlFor={id}>
+            <p className="text-body-xs text-[#3D3D3D] w-90 h-4.25">
+              {label}
+            </p>
           </label>
-          <div className="h-[48px] flex text-body-xs rounded-lg border-[1.5px] py-[12px] border-[#D1D1D1] pr-[15px] pl-[13px] gap-[10px]">
+          <div className="h-12 cursor-auto flex-col flex text-body-xs rounded-lg border-[1.5px] py-3 border-[#D1D1D1] pr-3.75 pl-3.25 gap-2.5">
             <div className="flex w-full justify-between">
               <input
-                className="gap-1"
+                className="gap-1 outline-none bg-transparent w-full"
                 type={typeDef}
                 name={name}
                 id={id}
@@ -55,6 +52,7 @@ function Input({
               />
               {type === "password" ? (
                 <button
+                  type="button"
                   onClick={(e) => toggleEye(e)}
                   className="cursor-pointer"
                 >

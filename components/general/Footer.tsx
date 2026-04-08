@@ -35,15 +35,15 @@ function Footer() {
             </div>
           </div>
           <div className="flex justify-between w-175">
-            <div className="gap-4 flex h-fit flex-col">
-              <h4 className="text-[#130E67] leading-6  text-h4 h-fit w-fit">
+            <div className="gap-4 flex justify-between h-fit flex-col">
+              <h4 className="text-[#130E67] leading-6 w-18.25 h-6 text-h4 ">
                 Explore
               </h4>
-              <ul className="flex flex-col">
-                <li className="text-body-md-regular h-fit w-fit text-grayscale-500">
+              <ul className="flex gap-2 flex-col">
+                <li className="text-body-md-regular gap-1.5 h-fit w-fit text-grayscale-500">
                   Enrolled Courses
                 </li>
-                <li className="text-body-md-regular h-fit w-fit  text-grayscale-500">
+                <li className="text-body-md-regular gap-1.5 h-fit w-fit  text-grayscale-500">
                   Browse Courses
                 </li>
               </ul>
@@ -61,7 +61,7 @@ function Footer() {
                 Contact
               </h4>
               <ul className="flex flex-col justify-center gap-2.5 items-start">
-                <li className="text-body-md-regular leading-[22px] flex justify-center gap-x-1.5 items-center text-grayscale-500">
+                <li className="text-body-md-regular leading-5.5 flex justify-center gap-x-1.5 items-center text-grayscale-500">
                   <svg
                     width="24"
                     height="24"
@@ -76,7 +76,7 @@ function Footer() {
                   </svg>
                   contact@company.com
                 </li>
-                <li className="text-body-md-regular leading-[22px] flex justify-center gap-x-1.5 items-center text-grayscale-500">
+                <li className="text-body-md-regular leading-5.5 flex justify-center gap-x-1.5 items-center text-grayscale-500">
                   <svg
                     width="22"
                     height="22"
@@ -91,7 +91,7 @@ function Footer() {
                   </svg>
                   (+995) 555 111 222
                 </li>
-                <li className="text-body-md-regular leading-[22px] flex justify-center gap-x-1.5 items-center text-grayscale-500">
+                <li className="text-body-md-regular leading-5.5 flex justify-center gap-x-1.5 items-center text-grayscale-500">
                   <svg
                     width="24"
                     height="24"
