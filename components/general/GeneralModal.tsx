@@ -13,7 +13,6 @@ function GeneralModal() {
       onClick={closeModal} // click outside closes
     >
       <div
-        className="bg-white rounded-lg p-6 min-w-75"
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         {content || <p>Default Modal</p>}

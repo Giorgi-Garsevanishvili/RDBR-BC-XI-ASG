@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "../ui/CloseIcon";
 import CTA_Button from "./CTA_Button";
 import Input from "./Input";
@@ -8,31 +8,49 @@ import StepEmail from "./StepEmail";
 import StepPassword from "./StepPassword";
 import StepProfile from "./StepProfile";
 import BackIcon from "../ui/BackIcon";
+import z from "zod";
+import axios from "axios";
 
 export type SignUpData = {
   email: string;
   password: string;
-  confirmPassword: string;
+  password_confirmation: string;
   username: string;
   avatar: string;
+};
+
+export type SignUpError = {
+  step1: { emailError: string };
+  step2: { passwordError: string; password_confirmation: string };
+  step3: { usernameError: string; avatarError: string; signUpError: string };
 };
 
 function SignUpForm() {
   const { closeModal, openModal } = useModal();
   const [step, setStep] = useState(1);
+  const [errorData, setErrorData] = useState<SignUpError>({
+    step1: { emailError: "" },
+    step2: { passwordError: "", password_confirmation: "" },
+    step3: { usernameError: "", avatarError: "", signUpError: "" },
+  });
 
   const [formData, setFormData] = useState<SignUpData>({
     email: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
     username: "",
     avatar: "",
   });
 
+  const emailSchema = z.string().email("Invalid email format");
+
   const next = () => {
-    if (step === 1 && !formData.email) return;
-    if (step === 2 && !formData.password && !formData.confirmPassword) return;
-    if (step === 3 && !formData.username) return;
+    const errorCheck = updateErrorState();
+
+    if (errorCheck) {
+      return;
+    }
+
     setStep((prev) => prev + 1);
   };
   const back = () => setStep((prev) => prev - 1);
@@ -41,22 +59,135 @@ function SignUpForm() {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
+  const updateErrorState = () => {
+    if (step === 1 && !formData.email) {
+      setErrorData((prev) => ({
+        ...prev,
+        step1: { emailError: "Email Must Be Provided" },
+      }));
+      return true;
+    }
+    if (step === 2 && !formData.password && !formData.password_confirmation) {
+      setErrorData((prev) => ({
+        ...prev,
+        step2: {
+          passwordError: "Password Must Be Provided",
+          password_confirmation: "Confirm Password Must Be provided",
+        },
+      }));
+      return true;
+    }
+    if (step === 3 && !formData.username) {
+      setErrorData((prev) => ({
+        ...prev,
+        step3: {
+          usernameError: "Username Must Be Provided",
+          avatarError: "",
+          signUpError: "",
+        },
+      }));
+      return true;
+    }
+
+    if (step === 1 && formData.email.length < 3) {
+      setErrorData((prev) => ({
+        ...prev,
+        step1: { emailError: "Email Must Be At Least 3 Symbols" },
+      }));
+      return true;
+    } else if (step === 1 && formData.email) {
+      const result = emailSchema.safeParse(formData.email);
+      if (!result.success) {
+        setErrorData((prev) => ({
+          ...prev,
+          step1: { emailError: result.error.issues[0].message },
+        }));
+        return true;
+      } else {
+        setErrorData((prev) => ({
+          ...prev,
+          step1: { emailError: "" },
+        }));
+        return false;
+      }
+    }
+
+    if (step === 2 && formData.password.length < 3) {
+      setErrorData((prev) => ({
+        ...prev,
+        step2: {
+          passwordError: "Password Must Be At Least 3 Symbols",
+          password_confirmation: "",
+        },
+      }));
+      return true;
+    } else if (step === 2 && formData.password) {
+      if (!formData.password_confirmation) {
+        setErrorData((prev) => ({
+          ...prev,
+          step2: {
+            passwordError: "",
+            password_confirmation: "Please Confirm Password",
+          },
+        }));
+        return true;
+      } else if (formData.password.trim() !== formData.password_confirmation.trim()) {
+        setErrorData((prev) => ({
+          ...prev,
+          step2: {
+            passwordError: "",
+            password_confirmation: "Password Doesn`t match",
+          },
+        }));
+        return true;
+      } else {
+        setErrorData((prev) => ({
+          ...prev,
+          step2: { passwordError: "", password_confirmation: "" },
+        }));
+        return false;
+      }
+    }
+  };
+
   const handleModalSwitch = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     closeModal();
     openModal(<LogIn />);
   };
 
+  const handleSubmit = async (e: React.SubmitEvent) => {
+    try {
+      e.preventDefault();
+      const errorCheck = updateErrorState();
+
+      if (errorCheck) {
+        return;
+      }
+      console.log(formData);
+      const response = await axios.post(
+        "https://api.redclass.redberryinternship.ge/api/register",
+        formData,
+      );
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+
+      setErrorData((prev) => ({
+        ...prev,
+        step3: { ...prev.step3, signUpError: `${error}` },
+      }));
+      return;
+    }
+  };
+
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (step === 3 && !formData.username) return;
-        console.log(formData);
-      }}
+      onSubmit={handleSubmit}
       className="w-115 flex items-end relative justify-start flex-col rounded-xl p-12.5 bg-[#FFFFFF] gap-3"
     >
-      <div className="flex absolute top-0 right-0 left-0">
+      <div className="flex absolute top-5 right-3.5 left-3.5">
         {step > 1 && (
           <button
             type="button"
@@ -80,10 +211,10 @@ function SignUpForm() {
           <div className=" flex flex-col w-full gap-4">
             <div className=" flex flex-col gap-6">
               <div className="flex cursor-default flex-col gap-1.5">
-                <h2 className="text-h2 w-90 h-9.75 flex items-center justify-center text-grayscale-900">
+                <h2 className="text-h2 w-full h-9.75 flex items-center justify-center text-grayscale-900">
                   Create Account
                 </h2>
-                <h2 className="text-body-xs w-90 h-4.25 flex items-center justify-center text-grayscale-500">
+                <h2 className="text-body-xs w-full h-4.25 flex items-center justify-center text-grayscale-500">
                   Join and start learning today
                 </h2>
               </div>
@@ -98,18 +229,28 @@ function SignUpForm() {
                   className={`w-[144.67px] gap-0 m-0 p-0 h-2 rounded-[30px] ${step === 3 ? "bg-[#B7B3F4]" : step > 3 ? "bg-[#4F46E5]" : "bg-[#EEEDFC]"} `}
                 ></p>
               </div>
-              {/**This is Place for steps */}
-              {/* <StepEmail /> */}
-              {/* <StepPassword /> */}
-              {/* <StepProfile /> */}
+
               {step === 1 && (
-                <StepEmail data={formData} updateData={updateData} />
+                <StepEmail
+                  errorData={errorData}
+                  data={formData}
+                  updateData={updateData}
+                />
               )}
               {step === 2 && (
-                <StepPassword data={formData} updateData={updateData} />
+                <StepPassword
+                  errorData={errorData}
+                  data={formData}
+                  updateData={updateData}
+                />
               )}
               {step === 3 && (
-                <StepProfile data={formData} updateData={updateData} />
+                <StepProfile
+                  setErrorData={setErrorData}
+                  errorData={errorData}
+                  data={formData}
+                  updateData={updateData}
+                />
               )}
             </div>
             <CTA_Button

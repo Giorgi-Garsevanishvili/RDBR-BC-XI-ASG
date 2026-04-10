@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "./Input";
-import { SignUpData } from "./SignUpForm";
+import { SignUpData, SignUpError } from "./SignUpForm";
 
 function StepProfile({
   data,
   updateData,
+  errorData,
+  setErrorData,
 }: {
   data: SignUpData;
   updateData: (data: Partial<SignUpData>) => void;
+  errorData: SignUpError;
+  setErrorData: (value: React.SetStateAction<SignUpError>) => void;
 }) {
   return (
     <>
       <Input
+        error={errorData.step3.usernameError}
         id="password"
         type="text"
         placeholder="Username"
@@ -23,6 +28,8 @@ function StepProfile({
         }}
       />
       <Input
+        setErrorData={setErrorData}
+        error={errorData.step3.avatarError || errorData.step3.signUpError}
         id="image"
         type="file"
         label="Upload Avatar"

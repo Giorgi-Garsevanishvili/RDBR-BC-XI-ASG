@@ -1,17 +1,20 @@
 import React from "react";
 import Input from "./Input";
-import { SignUpData } from "./SignUpForm";
+import { SignUpData, SignUpError } from "./SignUpForm";
 
 function StepPassword({
   data,
   updateData,
+  errorData,
 }: {
   data: SignUpData;
   updateData: (data: Partial<SignUpData>) => void;
+  errorData: SignUpError;
 }) {
   return (
     <>
       <Input
+        error={errorData.step2.passwordError}
         id="password"
         type="password"
         placeholder="Password"
@@ -23,14 +26,15 @@ function StepPassword({
         }}
       />
       <Input
-        id="password"
+        error={errorData.step2.password_confirmation}
+        id="confirm-password"
         type="password"
         placeholder="••••••••"
         label="Confirm Password*"
         name="password"
-        value={data.confirmPassword}
+        value={data.password_confirmation}
         onChange={(e) => {
-          updateData({ confirmPassword: e.target.value });
+          updateData({ password_confirmation: e.target.value });
         }}
       />
     </>
