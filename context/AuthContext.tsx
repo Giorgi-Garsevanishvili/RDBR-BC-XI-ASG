@@ -9,7 +9,6 @@ import {
   ReactNode,
 } from "react";
 import z from "zod";
-import { useModal } from "./ModalContext";
 import { checkAuth } from "@/lib/checkAuth";
 
 const LogInData = z.object({
@@ -19,11 +18,26 @@ const LogInData = z.object({
 
 export type LoginDataType = z.infer<typeof LogInData>;
 
+type RegisterReturnDataType = {
+  token: string;
+  user: {
+    age: null;
+    avatar: null;
+    email: string;
+    fullName: null;
+    id: number;
+    mobileNumber: null;
+    profileComplete: boolean;
+    username: string;
+  };
+};
+
 type AuthContextType = {
   loggedIn: boolean;
   signIn: (data: LoginDataType) => Promise<boolean>;
   signOut: () => void;
   reCheck: () => void;
+  AfterRegisterAuth: (data: RegisterReturnDataType) => boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -54,8 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         validated.data,
       );
 
-      console.log("SUCCESS:", response.data);
-
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.data.user));
 
@@ -73,14 +85,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const AfterRegisterAuth = (data: RegisterReturnDataType) => {
+    if (data.token && data.user) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      console.log(data);
+      
+
+      setLoggedIn(true);
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const signOut = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    reCheck()
+    reCheck();
   };
 
   return (
-    <AuthContext.Provider value={{ signIn, signOut, loggedIn, reCheck }}>
+    <AuthContext.Provider
+      value={{ signIn, signOut, loggedIn, reCheck, AfterRegisterAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );

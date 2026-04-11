@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CloseIcon from "../ui/CloseIcon";
 import CTA_Button from "./CTA_Button";
-import Input from "./Input";
 import { useModal } from "@/context/ModalContext";
 import LogIn from "./LogInForm";
 import StepEmail from "./StepEmail";
@@ -10,13 +9,13 @@ import StepProfile from "./StepProfile";
 import BackIcon from "../ui/BackIcon";
 import z from "zod";
 import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 export type SignUpData = {
   email: string;
   password: string;
   password_confirmation: string;
   username: string;
-  avatar: string;
 };
 
 export type SignUpError = {
@@ -25,26 +24,34 @@ export type SignUpError = {
   step3: { usernameError: string; avatarError: string; signUpError: string };
 };
 
+const ClearFormData = {
+  email: "",
+  password: "",
+  password_confirmation: "",
+  username: "",
+};
+
+const ClearErrorData = {
+  step1: { emailError: "" },
+  step2: { passwordError: "", password_confirmation: "" },
+  step3: { usernameError: "", avatarError: "", signUpError: "" },
+};
+
 function SignUpForm() {
   const { closeModal, openModal } = useModal();
   const [step, setStep] = useState(1);
-  const [errorData, setErrorData] = useState<SignUpError>({
-    step1: { emailError: "" },
-    step2: { passwordError: "", password_confirmation: "" },
-    step3: { usernameError: "", avatarError: "", signUpError: "" },
-  });
+  const [avatarFile, setAvatarFile] = useState<File>();
+  const [errorData, setErrorData] = useState<SignUpError>(ClearErrorData);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File>();
+  const { AfterRegisterAuth } = useAuth();
 
-  const [formData, setFormData] = useState<SignUpData>({
-    email: "",
-    password: "",
-    password_confirmation: "",
-    username: "",
-    avatar: "",
-  });
+  const [formData, setFormData] = useState<SignUpData>(ClearFormData);
 
   const emailSchema = z.string().email("Invalid email format");
 
-  const next = () => {
+  const next = (e: React.SubmitEvent) => {
+    e.preventDefault();
     const errorCheck = updateErrorState();
 
     if (errorCheck) {
@@ -131,7 +138,9 @@ function SignUpForm() {
           },
         }));
         return true;
-      } else if (formData.password.trim() !== formData.password_confirmation.trim()) {
+      } else if (
+        formData.password.trim() !== formData.password_confirmation.trim()
+      ) {
         setErrorData((prev) => ({
           ...prev,
           step2: {
@@ -152,39 +161,119 @@ function SignUpForm() {
 
   const handleModalSwitch = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setAvatarFile(undefined);
+    setFormData(ClearFormData);
+    setErrorData(ClearErrorData);
+    setPreview(null);
     closeModal();
     openModal(<LogIn />);
   };
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+    setFile(selectedFile);
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    // File Type Validation
+    if (setErrorData) {
+      if (!allowedTypes.includes(selectedFile.type)) {
+        setErrorData((prev) => ({
+          ...prev,
+          step3: {
+            ...prev.step3,
+            avatarError: "Only JPG, PNG or WebP allowed ",
+          },
+        }));
+        return;
+      }
+
+      // SIZE VALIDATION
+      if (selectedFile.size > maxSize) {
+        setErrorData?.((prev) => ({
+          ...prev,
+          step3: {
+            ...prev.step3,
+            avatarError: "Max size is 2MB",
+          },
+        }));
+        return;
+      }
+      const previewUrl = URL.createObjectURL(selectedFile);
+
+      setFile(selectedFile);
+      setPreview(previewUrl);
+      if (selectedFile) {
+        setAvatarFile?.(selectedFile);
+      }
+
+      setErrorData?.((prev) => ({
+        ...prev,
+        step3: {
+          ...prev.step3,
+          avatarError: "",
+        },
+      }));
+    }
+  };
+
   const handleSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
       const errorCheck = updateErrorState();
 
       if (errorCheck) {
         return;
       }
-      console.log(formData);
+      const form = new FormData();
+      form.append("username", formData.username.trim());
+      form.append("email", formData.email.trim());
+      form.append("password", formData.password.trim());
+      form.append(
+        "password_confirmation",
+        formData.password_confirmation.trim(),
+      );
+      if (avatarFile) {
+        form.append("avatar", avatarFile);
+      }
+
       const response = await axios.post(
         "https://api.redclass.redberryinternship.ge/api/register",
-        formData,
+        form,
       );
 
-      console.log(response);
-    } catch (error) {
-      console.log(error);
+      if (response.data.data.token) {
+        const registered = AfterRegisterAuth(response.data.data);
+        if (registered) {
+          setAvatarFile(undefined);
+          setFormData(ClearFormData);
+          setErrorData(ClearErrorData);
+          setPreview(null);
+          closeModal();
+        }
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data;
 
-      setErrorData((prev) => ({
-        ...prev,
-        step3: { ...prev.step3, signUpError: `${error}` },
-      }));
-      return;
+        setErrorData((prev) => ({
+          ...prev,
+          step3: {
+            ...prev.step3,
+            signUpError: data?.message || "Something went wrong",
+          },
+        }));
+      } else {
+        console.log(error); // unknown error
+      }
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={(e) => (step === 3 ? handleSubmit(e) : next(e))}
       className="w-115 flex items-end relative justify-start flex-col rounded-xl p-12.5 bg-[#FFFFFF] gap-3"
     >
       <div className="flex absolute top-5 right-3.5 left-3.5">
@@ -246,7 +335,9 @@ function SignUpForm() {
               )}
               {step === 3 && (
                 <StepProfile
-                  setErrorData={setErrorData}
+                  file={file}
+                  preview={preview}
+                  handleFileChange={handleFileChange}
                   errorData={errorData}
                   data={formData}
                   updateData={updateData}
@@ -254,10 +345,7 @@ function SignUpForm() {
               )}
             </div>
             <CTA_Button
-              action={() => {
-                step === 3 ? null : next();
-              }}
-              type={step === 3 ? "submit" : "button"}
+              type="submit"
               className="p-2.5 gap-2.5 flex items-center justify-center text-button-sm leading-6 h-11.75"
               title={step === 3 ? "Sign Up" : "Next"}
             />
@@ -276,6 +364,7 @@ function SignUpForm() {
                 Already have an account?{" "}
               </p>
               <button
+                type="button"
                 onClick={(e) => handleModalSwitch(e)}
                 className="w-10.25 h-4.25 cursor-pointer justify-center items-center text-underlined-sm  text-grayscale-900 text-body-xs"
               >

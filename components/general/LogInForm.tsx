@@ -22,7 +22,7 @@ function LogIn() {
     }));
   };
 
-  const { signIn, signOut } = useAuth();
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,13 +46,15 @@ function LogIn() {
       onSubmit={handleSubmit}
       className="w-115 flex items-end relative justify-start flex-col rounded-xl p-12.5 bg-[#FFFFFF] gap-3"
     >
-      <button
-        type="button"
-        onClick={closeModal}
-        className="cursor-pointer absolute flex top-0 right-0"
-      >
-        <CloseIcon />
-      </button>
+      <div className="flex absolute top-5 right-3.5 left-3.5">
+        <button
+          type="button"
+          onClick={closeModal}
+          className="cursor-pointer absolute flex top-0 right-0"
+        >
+          <CloseIcon />
+        </button>
+      </div>
       <div className="flex flex-col w-full gap-6">
         <div className=" flex flex-col w-full gap-4">
           <div className=" flex flex-col w-full gap-4">

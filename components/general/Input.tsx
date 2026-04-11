@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import EyeIcon from "../ui/EyeIcon";
 import EyeClosedIcon from "../ui/EyeClosedIcon";
 import UploadIcon from "../ui/UploadIcon";
-import { SignUpError } from "./SignUpForm";
-import { toBase64 } from "@/lib/toBase64";
 
 function Input({
   label,
@@ -15,84 +13,31 @@ function Input({
   value,
   error,
   onChange,
-  setErrorData,
+  file,
+  preview,
+  handleFileChange,
 }: {
   label: string;
   id: string;
   type: string;
   name: string;
   placeholder?: string;
-  value: string;
+  value?: string;
   error?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  setErrorData?: (value: React.SetStateAction<SignUpError>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  file?: File | undefined;
+  preview?: string | null;
+  handleFileChange?: (
+    e: React.ChangeEvent<HTMLInputElement, Element>,
+  ) => Promise<void>;
 }) {
   const [typeDef, setTypeDef] = useState(type);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File>();
 
   const toggleEye = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (typeDef === "password") {
       setTypeDef("text");
     } else {
       setTypeDef("password");
-    }
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (!selectedFile) return;
-    setFile(selectedFile);
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-
-    if (setErrorData) {
-      if (!allowedTypes.includes(selectedFile.type)) {
-        setErrorData((prev) => ({
-          ...prev,
-          step3: {
-            usernameError: "",
-            signUpError: "",
-            avatarError: "Only JPG, PNG or WebP allowed ",
-          },
-        }));
-        return;
-      }
-
-      try {
-        const base64 = await toBase64(selectedFile);
-        const trimmedBase64 = base64.split(",")[1]
-        const previewUrl = URL.createObjectURL(selectedFile);
-
-        // ✅ update local UI
-        setFile(selectedFile);
-        setPreview(previewUrl);
-
-        // ✅ send base64 to parent (IMPORTANT)
-        onChange({
-          target: {
-            name,
-            value: trimmedBase64,
-          },
-        } as React.ChangeEvent<HTMLInputElement>);
-
-        // ✅ clear only avatar error
-        setErrorData?.((prev) => ({
-          ...prev,
-          step3: {
-            ...prev.step3,
-            avatarError: "",
-          },
-        }));
-      } catch (err) {
-        setErrorData?.((prev) => ({
-          ...prev,
-          step3: {
-            ...prev.step3,
-            avatarError: "Failed to process file",
-          },
-        }));
-      }
     }
   };
 
@@ -114,17 +59,22 @@ function Input({
           />
 
           {preview && file ? (
-            <div className="flex items-center gap-3">
-              <img
-                src={preview}
-                alt="preview"
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <div>
-                <p>{file?.name}</p>
-                <p className="text-sm text-gray-400">
-                  {(file.size / 1024 / 1024).toFixed(2)} MB
-                </p>
+            <div className="flex pr-10 pl-10 w-full gap-2">
+              <div className="flex justify-center items-center gap-2.5">
+                <img
+                  src={preview}
+                  alt="preview"
+                  className="w-13.5 h-13.5 rounded-[40px] object-cover"
+                />
+                <div className="flex flex-col gap-0.5 w-full">
+                  <div>
+                    <p className="w-44 h-3.75 text-helper-s-regular text-grayscale-600 truncate">{file?.name}</p>
+                    <p className="w-44 h-3 text-helper-xs-regular text-grayscale-300">
+                      {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                  </div>
+                  <p className="w-44 h-3 underline font-medium text-[10px] align-middle text-[#4F46E5]">Change</p>
+                </div>
               </div>
             </div>
           ) : (

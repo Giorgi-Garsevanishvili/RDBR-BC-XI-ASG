@@ -6,12 +6,18 @@ function StepProfile({
   data,
   updateData,
   errorData,
-  setErrorData,
+  file,
+  preview,
+  handleFileChange,
 }: {
   data: SignUpData;
   updateData: (data: Partial<SignUpData>) => void;
   errorData: SignUpError;
-  setErrorData: (value: React.SetStateAction<SignUpError>) => void;
+  file: File | undefined;
+  preview: string | null;
+  handleFileChange: (
+    e: React.ChangeEvent<HTMLInputElement, Element>,
+  ) => Promise<void>;
 }) {
   return (
     <>
@@ -28,16 +34,14 @@ function StepProfile({
         }}
       />
       <Input
-        setErrorData={setErrorData}
+        file={file}
+        preview={preview}
         error={errorData.step3.avatarError || errorData.step3.signUpError}
         id="image"
         type="file"
         label="Upload Avatar"
         name="file"
-        value={data.avatar}
-        onChange={(e) => {
-          updateData({ avatar: e.target.value });
-        }}
+        handleFileChange={handleFileChange}
       />
     </>
   );
