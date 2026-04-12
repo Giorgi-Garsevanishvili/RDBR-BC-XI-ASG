@@ -50,8 +50,8 @@ function FeaturedCoursesSection() {
   };
 
   useEffect(() => {
-    getFeaturedCourses()
-  },[])
+    getFeaturedCourses();
+  }, []);
 
   return (
     <section className="h-184.75 w-full flex flex-col gap-8">
@@ -67,8 +67,8 @@ function FeaturedCoursesSection() {
         </div>
       </div>
       {/** Cards Section  */}
-      <div className="gap-6 items-center justify-between flex">
-        {featuredCoursed.map((course) => (
+      <div className="gap-6 items-center flex">
+        {featuredCoursed.slice(0, 3).map((course) => (
           <FeaturedCoursesCard key={course.id} course={course} />
         ))}
       </div>

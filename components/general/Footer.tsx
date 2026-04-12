@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import NavIconLogo from "../ui/NavIconLogo";
 import FacebookIcon from "../../public/Facebook.svg";
@@ -5,8 +6,14 @@ import TwitterIcon from "../../public/Twitter.svg";
 import InstagramIcon from "../../public/Instagram.svg";
 import LinkedinIcon from "../../public/LinkedIn.svg";
 import YoutubeIcon from "../../public/YouTube.svg";
+import { useAuth } from "@/context/AuthContext";
+import { useModal } from "@/context/ModalContext";
+import SignUpForm from "./SignUpForm";
+import LogIn from "./LogInForm";
 
 function Footer() {
+  const { loggedIn } = useAuth();
+  const { openModal } = useModal();
   return (
     <footer className="w-full  border-t flex justify-center items-center flex-col border-grayscale-200">
       <div className=" w-391.5  border-t border-[#F5F5F5]" />
@@ -40,21 +47,43 @@ function Footer() {
                 Explore
               </h4>
               <ul className="flex gap-2 flex-col">
-                <li className="text-body-md-regular gap-1.5 h-fit w-fit text-grayscale-500">
-                  Enrolled Courses
-                </li>
-                <li className="text-body-md-regular gap-1.5 h-fit w-fit  text-grayscale-500">
+                {loggedIn && (
+                  <li className="text-body-md-regular leading-6 gap-1.5 h-fit w-fit text-grayscale-500">
+                    Enrolled Courses
+                  </li>
+                )}
+                <li className="text-body-md-regular leading-6 gap-1.5 h-fit w-fit  text-grayscale-500">
                   Browse Courses
                 </li>
               </ul>
             </div>
             <div className="gap-4 flex h-fit flex-col">
               <h4 className="text-[#130E67]  text-h4 w-fit">Account</h4>
-              <ul className="flex flex-col">
-                <li className="text-body-md-regular  text-grayscale-500">
-                  My Profile
-                </li>
-              </ul>
+              {loggedIn ? (
+                <ul className="flex flex-col">
+                  <li
+                    onClick={() => openModal(<SignUpForm />)}
+                    className="text-body-md-regular cursor-pointer leading-6  text-grayscale-500"
+                  >
+                    My Account
+                  </li>
+                </ul>
+              ) : (
+                <ul className="flex gap-2 flex-col">
+                  <li
+                    onClick={() => openModal(<SignUpForm />)}
+                    className="text-body-md-regular cursor-pointer leading-6 text-grayscale-500"
+                  >
+                    Sign Up
+                  </li>
+                  <li
+                    onClick={() => openModal(<LogIn />)}
+                    className="text-body-md-regular cursor-pointer leading-6  text-grayscale-500"
+                  >
+                    Log In
+                  </li>
+                </ul>
+              )}
             </div>
             <div className="gap-4 flex h-fit flex-col">
               <h4 className="text-[#130E67] leading-6  text-h4 w-fit">

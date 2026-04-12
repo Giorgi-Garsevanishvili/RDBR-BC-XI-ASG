@@ -37,6 +37,7 @@ type AuthContextType = {
   signIn: (data: LoginDataType) => Promise<boolean>;
   signOut: () => void;
   reCheck: () => void;
+  error: string;
   AfterRegisterAuth: (data: RegisterReturnDataType) => boolean;
 };
 
@@ -44,6 +45,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     reCheck();
@@ -58,7 +60,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const validated = LogInData.safeParse(data);
 
     if (!validated.success) {
-      console.log(validated.error.format());
       return false;
     }
 
@@ -75,9 +76,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return true;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("ERROR:", error.response?.data);
+        setError(`${error.response?.data.message}`);
+        setTimeout(() => {
+          setError("");
+        }, 5000);
       } else {
-        console.log(error);
+        setError(`${error}`);
+        setTimeout(() => {
+          setError("");
+        }, 6000);
       }
 
       setLoggedIn(false);
@@ -89,8 +96,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data.token && data.user) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      console.log(data);
-      
 
       setLoggedIn(true);
       return true;
@@ -107,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ signIn, signOut, loggedIn, reCheck, AfterRegisterAuth }}
+      value={{ signIn, signOut, loggedIn, reCheck, AfterRegisterAuth, error }}
     >
       {children}
     </AuthContext.Provider>

@@ -6,9 +6,12 @@ import { useModal } from "@/context/ModalContext";
 import z from "zod";
 import { LoginDataType, useAuth } from "@/context/AuthContext";
 import SignUpForm from "./SignUpForm";
+import EnrolledCoursesSidebar from "./EnrolledCoursesSidebar";
+import { usePathname } from "next/navigation";
 
 function LogIn() {
   const { closeModal, openModal } = useModal();
+  const path = usePathname();
   const [formData, setFormData] = useState<LoginDataType>({
     email: "",
     password: "",
@@ -22,16 +25,18 @@ function LogIn() {
     }));
   };
 
-  const { signIn } = useAuth();
+  const { signIn, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("SUBMIT");
 
     const success = await signIn(formData);
 
     if (success) {
       closeModal();
+      if (path === "/") {
+        openModal(<EnrolledCoursesSidebar />);
+      }
     }
   };
 
@@ -86,6 +91,11 @@ function LogIn() {
                 onChange={handleChange}
               />
             </div>
+            {error ? (
+              <h3 className="text-helper-s-regular flex items-center justify-start w-[320px] h-3.75 text-error ">
+                {error}
+              </h3>
+            ) : null}
             <CTA_Button
               type="submit"
               className="p-2.5 gap-2.5 flex items-center justify-center text-button-sm h-11.75"

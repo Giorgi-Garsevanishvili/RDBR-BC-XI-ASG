@@ -28,7 +28,7 @@ function CourseCardProgress({ locked }: { locked: boolean }) {
                 </h4>
               </div>
               <div className="flex justify-center items-center gap-1">
-                <RatingFullStar />
+                <RatingFullStar className="w-4.5 h-4.5" />
                 <h5 className="w-5.5 h-4.25 text-body-xs text-grayscale-600">
                   4.9
                 </h5>

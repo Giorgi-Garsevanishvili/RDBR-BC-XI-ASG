@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import EyeIcon from "../ui/EyeIcon";
 import EyeClosedIcon from "../ui/EyeClosedIcon";
 import UploadIcon from "../ui/UploadIcon";
+import Image from "next/image";
 
 function Input({
   label,
@@ -44,7 +45,9 @@ function Input({
   if (type === "file") {
     return (
       <div className="flex flex-col gap-1.5">
-        <label className="text-body-xs text-grayscale-700">{label}</label>
+        <label htmlFor={id} className="text-body-xs text-grayscale-700">
+          {label}
+        </label>
 
         <label
           htmlFor={id}
@@ -61,19 +64,27 @@ function Input({
           {preview && file ? (
             <div className="flex pr-10 pl-10 w-full gap-2">
               <div className="flex justify-center items-center gap-2.5">
-                <img
-                  src={preview}
-                  alt="preview"
-                  className="w-13.5 h-13.5 rounded-[40px] object-cover"
-                />
+                <div className="w-13.5 h-13.5 shrink-0 flex">
+                  <Image
+                    src={preview}
+                    alt="preview"
+                    width={54}
+                    height={54}
+                    className="object-cover rounded-[40px] "
+                  />
+                </div>
                 <div className="flex flex-col gap-0.5 w-full">
                   <div>
-                    <p className="w-44 h-3.75 text-helper-s-regular text-grayscale-600 truncate">{file?.name}</p>
+                    <p className="w-44 h-3.75 text-helper-s-regular text-grayscale-600 truncate">
+                      {file?.name}
+                    </p>
                     <p className="w-44 h-3 text-helper-xs-regular text-grayscale-300">
                       {(file.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </div>
-                  <p className="w-44 h-3 underline font-medium text-[10px] align-middle text-[#4F46E5]">Change</p>
+                  <p className="w-44 h-3 underline font-medium text-[10px] align-middle text-[#4F46E5]">
+                    Change
+                  </p>
                 </div>
               </div>
             </div>

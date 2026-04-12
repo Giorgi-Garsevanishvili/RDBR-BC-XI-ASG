@@ -4,9 +4,18 @@ import React from "react";
 import CourseCardProgress from "./CourseCardProgress";
 import { useAuth } from "@/context/AuthContext";
 import LockComponent from "./LockComponent";
+import { useModal } from "@/context/ModalContext";
+import EnrolledCoursesSidebar from "./EnrolledCoursesSidebar";
+import LogIn from "./LogInForm";
 
 function ContinueLearningSection() {
   const { loggedIn } = useAuth();
+  const { openModal } = useModal();
+
+  const handleSeeAll = (e: React.MouseEvent) => {
+    e.preventDefault();
+    loggedIn ? openModal(<EnrolledCoursesSidebar />) : openModal(<LogIn />);
+  };
   return (
     <section className="h-92.25 w-full flex flex-col gap-8">
       <div className="flex flex-col w-full pl-px gap-2.5">
@@ -22,26 +31,30 @@ function ContinueLearningSection() {
             </div>
           </div>
           <div className="content-end items-end flex grow text-[#4F46E5] text-underlined-md ">
-            <Link className="w-[66px] h-[24px]" href="/">
+            <button
+              type="button"
+              className="w-[66px] cursor-pointer h-[24px]"
+              onClick={(e) => handleSeeAll(e)}
+            >
               See All
-            </Link>
+            </button>
           </div>
         </div>
       </div>
-        <div className="flex w-full gap-6">
-          {loggedIn ? (
-            <CourseCardProgress locked={false} />
-          ) : (
-            <div className="flex w-full gap-6 relative">
-              <CourseCardProgress locked />
-              <CourseCardProgress locked />
-              <CourseCardProgress locked />
-              <div className="absolute flex justify-center inset-0">
-                <LockComponent />
-              </div>
+      <div className="flex w-full gap-6">
+        {loggedIn ? (
+          <CourseCardProgress locked={false} />
+        ) : (
+          <div className="flex w-full gap-6 relative">
+            <CourseCardProgress locked />
+            <CourseCardProgress locked />
+            <CourseCardProgress locked />
+            <div className="absolute flex justify-center inset-0">
+              <LockComponent />
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

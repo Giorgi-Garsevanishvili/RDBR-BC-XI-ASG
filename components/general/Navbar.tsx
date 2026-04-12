@@ -1,21 +1,12 @@
 "use client";
-import Image from "next/image";
-import UserIcon from "../../public/User.svg";
 import NavIconLogo from "../ui/NavIconLogo";
 import NavBrowseCoursesButton from "./NavBrowseCoursesButton";
 import NavEnrolledCourses from "./NavEnrolledCoursesButton";
 import ProfileComponent from "./ProfileComponent";
 import NavAuthorizeComponent from "./NavAuthorizeComponent";
-import GeneralModal from "./GeneralModal";
-import { useEffect, useState } from "react";
-import { checkAuth } from "@/lib/checkAuth";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
-type Status = {
-  logged: boolean;
-  data: {};
-};
 
 function NavbarComp() {
   const { loggedIn, signOut } = useAuth();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CloseIcon from "../ui/CloseIcon";
 import CTA_Button from "./CTA_Button";
 import { useModal } from "@/context/ModalContext";
@@ -10,6 +10,8 @@ import BackIcon from "../ui/BackIcon";
 import z from "zod";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
+import { usePathname } from "next/navigation";
+import EnrolledCoursesSidebar from "./EnrolledCoursesSidebar";
 
 export type SignUpData = {
   email: string;
@@ -45,9 +47,8 @@ function SignUpForm() {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File>();
   const { AfterRegisterAuth } = useAuth();
-
+  const path = usePathname();
   const [formData, setFormData] = useState<SignUpData>(ClearFormData);
-
   const emailSchema = z.string().email("Invalid email format");
 
   const next = (e: React.SubmitEvent) => {
@@ -55,6 +56,9 @@ function SignUpForm() {
     const errorCheck = updateErrorState();
 
     if (errorCheck) {
+      setTimeout(() => {
+        setErrorData(ClearErrorData);
+      }, 6000);
       return;
     }
 
@@ -216,6 +220,10 @@ function SignUpForm() {
           avatarError: "",
         },
       }));
+
+      setTimeout(() => {
+        setErrorData(ClearErrorData);
+      }, 6000);
     }
   };
 
@@ -252,6 +260,9 @@ function SignUpForm() {
           setErrorData(ClearErrorData);
           setPreview(null);
           closeModal();
+          if (path === "/") {
+            openModal(<EnrolledCoursesSidebar />);
+          }
         }
       }
     } catch (error: unknown) {
@@ -268,6 +279,10 @@ function SignUpForm() {
       } else {
         console.log(error); // unknown error
       }
+    } finally {
+      setTimeout(() => {
+        setErrorData(ClearErrorData);
+      }, 6000);
     }
   };
 
