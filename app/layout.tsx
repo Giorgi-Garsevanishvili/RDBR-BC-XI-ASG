@@ -23,12 +23,10 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <AuthProvider>
           <ModalProvider>
-            <main className="flex-1 h-full flex flex-col gap-16">
-              <GeneralModal />
-              <NavbarComp />
-              <div className="mx-auto grow h-full max-w-480">{children}</div>
-              <Footer />
-            </main>
+            <GeneralModal />
+            <NavbarComp />
+            {children}
+            <Footer />
           </ModalProvider>
         </AuthProvider>
       </body>

@@ -3,7 +3,6 @@ import CloseIcon from "../ui/CloseIcon";
 import CTA_Button from "./CTA_Button";
 import Input from "./Input";
 import { useModal } from "@/context/ModalContext";
-import z from "zod";
 import { LoginDataType, useAuth } from "@/context/AuthContext";
 import SignUpForm from "./SignUpForm";
 import EnrolledCoursesSidebar from "./EnrolledCoursesSidebar";
@@ -16,7 +15,10 @@ function LogIn() {
     email: "",
     password: "",
   });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({

@@ -9,7 +9,7 @@ import {
   ReactNode,
 } from "react";
 import z from "zod";
-import { checkAuth } from "@/lib/checkAuth";
+import { checkAuth, UserDataType } from "@/lib/checkAuth";
 
 const LogInData = z.object({
   email: z.email().trim(),
@@ -18,15 +18,15 @@ const LogInData = z.object({
 
 export type LoginDataType = z.infer<typeof LogInData>;
 
-type RegisterReturnDataType = {
+export type RegisterReturnDataType = {
   token: string;
   user: {
-    age: null;
-    avatar: null;
+    age: string | null;
+    avatar: string | null;
     email: string;
-    fullName: null;
+    fullName: string;
     id: number;
-    mobileNumber: null;
+    mobileNumber: string;
     profileComplete: boolean;
     username: string;
   };
@@ -34,10 +34,13 @@ type RegisterReturnDataType = {
 
 type AuthContextType = {
   loggedIn: boolean;
+  user: UserDataType | undefined;
   signIn: (data: LoginDataType) => Promise<boolean>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
   reCheck: () => void;
+  token: string;
   error: string;
+  userUpdateRecorder: (data: UserDataType) => void;
   AfterRegisterAuth: (data: RegisterReturnDataType) => boolean;
 };
 
@@ -45,15 +48,25 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState<UserDataType | undefined>();
   const [error, setError] = useState<string>("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     reCheck();
   }, []);
 
+  const userUpdateRecorder = (data: UserDataType) => {
+    localStorage.setItem("user", JSON.stringify(data));
+  };
+
   const reCheck = () => {
     const authStatus = checkAuth();
     setLoggedIn(authStatus.logged);
+    setUser(authStatus.data?.user);
+    if (authStatus.data?.token) {
+      setToken(authStatus.data?.token);
+    }
   };
 
   const signIn = async (data: LoginDataType): Promise<boolean> => {
@@ -72,6 +85,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.data.user));
 
+      setToken(response.data.data.token);
+      setUser(response.data.data.user);
       setLoggedIn(true);
       return true;
     } catch (error) {
@@ -97,6 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      setToken(data.token);
       setLoggedIn(true);
       return true;
     } else {
@@ -104,15 +120,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signOut = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    reCheck();
+  const signOut = async () => {
+    try {
+      const AuthToken = localStorage.getItem("token");
+      console.log(AuthToken);
+
+      const response = await axios.post(
+        "https://api.redclass.redberryinternship.ge/api/logout",null,
+        { headers: { Authorization: `Bearer ${AuthToken}` } },
+      );
+
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+
+      console.log("success", response);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data;
+        console.log(error);
+        console.log(data || error); // unknown error
+      } else {
+        console.log(error);
+      }
+    }
   };
 
   return (
     <AuthContext.Provider
-      value={{ signIn, signOut, loggedIn, reCheck, AfterRegisterAuth, error }}
+      value={{
+        signIn,
+        signOut,
+        token,
+        loggedIn,
+        reCheck,
+        AfterRegisterAuth,
+        error,
+        userUpdateRecorder,
+        user,
+      }}
     >
       {children}
     </AuthContext.Provider>

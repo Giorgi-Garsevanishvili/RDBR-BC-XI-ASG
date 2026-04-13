@@ -1,10 +1,34 @@
+"use client";
+
+export type UserDataType = {
+  age: string | null;
+  avatar: string | null;
+  email: string;
+  fullName: string;
+  id: number;
+  mobileNumber: string | null;
+  profileComplete: boolean;
+  username: string;
+};
+
 export const checkAuth = () => {
   const user = localStorage.getItem("user");
   const token = localStorage.getItem("token");
 
   if (!user || !token) {
-    return { logged: false, data: [] };
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    return { logged: false, data: null };
   }
 
-  return { logged: true, data: { token: token, user: user } };
+  try {
+    const parsedUser: UserDataType = JSON.parse(user);
+
+    return {
+      logged: true,
+      data: { token, user: parsedUser },
+    };
+  } catch {
+    return { logged: false, data: null };
+  }
 };

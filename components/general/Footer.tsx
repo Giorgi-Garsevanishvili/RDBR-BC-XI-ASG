@@ -10,12 +10,14 @@ import { useAuth } from "@/context/AuthContext";
 import { useModal } from "@/context/ModalContext";
 import SignUpForm from "./SignUpForm";
 import LogIn from "./LogInForm";
+import MyProfileComponent from "./MyProfileComponent";
+import EnrolledCoursesSidebar from "./EnrolledCoursesSidebar";
 
 function Footer() {
   const { loggedIn } = useAuth();
   const { openModal } = useModal();
   return (
-    <footer className="w-full  border-t flex justify-center items-center flex-col border-grayscale-200">
+    <footer className="w-full  border-t flex justify-center items-center flex-col bg-grayscale-100 border-grayscale-200">
       <div className=" w-391.5  border-t border-[#F5F5F5]" />
       <div className="pb-5 pt-20 gap-18.5 w-391.5 flex flex-col">
         <div className="flex justify-between">
@@ -48,7 +50,7 @@ function Footer() {
               </h4>
               <ul className="flex gap-2 flex-col">
                 {loggedIn && (
-                  <li className="text-body-md-regular leading-6 gap-1.5 h-fit w-fit text-grayscale-500">
+                  <li onClick={() => openModal(<EnrolledCoursesSidebar />)} className="text-body-md-regular cursor-pointer leading-6 gap-1.5 h-fit w-fit text-grayscale-500">
                     Enrolled Courses
                   </li>
                 )}
@@ -62,7 +64,7 @@ function Footer() {
               {loggedIn ? (
                 <ul className="flex flex-col">
                   <li
-                    onClick={() => openModal(<SignUpForm />)}
+                    onClick={() => openModal(<MyProfileComponent />)}
                     className="text-body-md-regular cursor-pointer leading-6  text-grayscale-500"
                   >
                     My Account

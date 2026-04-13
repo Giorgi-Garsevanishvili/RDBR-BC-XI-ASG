@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Breadcrumb from "./Breadcrumb";
 
 type FeaturedCoursesData = {
   id: 1;
@@ -51,6 +52,7 @@ function CourseInfo({ id }: { id: string }) {
   }, []);
   return (
     <div>
+      <Breadcrumb categoryName={featuredCourses?.category.name} />
       {featuredCourses ? (
         <div className="flex flex-col justify-center items-center">
           {Object.entries(featuredCourses).map(([key, value]) => (

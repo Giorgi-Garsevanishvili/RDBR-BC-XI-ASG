@@ -14,13 +14,13 @@ function NavAuthorizeComponent() {
       <div className="flex items-center justify-center gap-3.75">
         <CTA_Button_Outlined
           action={() => openModal(<LogIn />)}
-          className="h-15 w-28.5"
+          className="h-15 justify-center flex items-center text-button-md w-28.5"
           title="Log In"
         />
         <CTA_Button
           type="button"
           action={() => openModal(<SignUpForm />)}
-          className="h-15 text-button-md"
+          className="h-15 justify-center flex items-center text-button-md"
           title="Sign Up"
         />
       </div>

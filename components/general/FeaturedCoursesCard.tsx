@@ -33,7 +33,7 @@ type FeaturedCoursesData = {
 function FeaturedCoursesCard({ course }: { course: FeaturedCoursesData }) {
   const pageRedirect = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    redirect(`pages/courses/${course.id}`);
+    redirect(`/browse/${course.id}`);
   };
   return (
     <div className="w-126.5 flex flex-col rounded-xl hover:border-[0.5px] cursor-pointer active:border active:border-[#958FEF] active:[0px_0px_35px_0px_#8A82D41A] hover:border-[#B7B3F4] hover:shadow-[0px_0px_25px_0px_#8A82D41A] transition-all duration-300 ease-out  border bg-grayscale-50 border-grayscale-100 p-5 gap-6">

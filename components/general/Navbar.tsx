@@ -6,17 +6,14 @@ import ProfileComponent from "./ProfileComponent";
 import NavAuthorizeComponent from "./NavAuthorizeComponent";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-
+import { checkAuth } from "@/lib/checkAuth";
+import { useModal } from "@/context/ModalContext";
+import MyProfileComponent from "./MyProfileComponent";
 
 function NavbarComp() {
-  const { loggedIn, signOut } = useAuth();
+  const { loggedIn, user } = useAuth();
+  const {openModal} = useModal()
 
-  const handleSignOut = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    signOut();
-  };
-
-  console.log(loggedIn);
 
   return (
     <header className="flex gap-2.5 bg-grayscale-100 border-b border-grayscale-200 px-44.25 py-6 shadow-[0px_0px_11.7px_0px_#0000000A]">
@@ -30,8 +27,8 @@ function NavbarComp() {
             {loggedIn ? <NavEnrolledCourses /> : null}
           </div>
           {loggedIn ? (
-            <button onClick={handleSignOut}>
-              <ProfileComponent />
+            <button onClick={() => openModal(<MyProfileComponent />)}>
+              <ProfileComponent profileComplete={user?.profileComplete} />
             </button>
           ) : (
             <NavAuthorizeComponent />

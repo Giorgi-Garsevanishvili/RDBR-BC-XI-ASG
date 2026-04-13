@@ -17,7 +17,7 @@ function ContinueLearningSection() {
     loggedIn ? openModal(<EnrolledCoursesSidebar />) : openModal(<LogIn />);
   };
   return (
-    <section className="h-92.25 w-full flex flex-col gap-8">
+    <section className="h-92.25 w-full items-center flex flex-col gap-8">
       <div className="flex flex-col w-full pl-px gap-2.5">
         <div className="flex relative w-full">
           <div className="flex grow flex-col gap-1.5">

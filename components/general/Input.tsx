@@ -17,29 +17,44 @@ function Input({
   file,
   preview,
   handleFileChange,
+  disabled,
+  Icon,
+  success,
 }: {
   label: string;
   id: string;
   type: string;
   name: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   error?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
+  Icon?: React.ComponentType;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
   file?: File | undefined;
   preview?: string | null;
   handleFileChange?: (
     e: React.ChangeEvent<HTMLInputElement, Element>,
   ) => Promise<void>;
+  success?: boolean;
 }) {
   const [typeDef, setTypeDef] = useState(type);
+  const [localDisable, setLocalDisable] = useState(true);
 
   const toggleEye = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (typeDef === "password") {
       setTypeDef("text");
     } else {
       setTypeDef("password");
     }
+  };
+
+  const toggleLocalDisable = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLocalDisable(!localDisable);
   };
 
   if (type === "file") {
@@ -91,7 +106,7 @@ function Input({
           ) : (
             <div className="flex flex-col items-center gap-1.5">
               <UploadIcon />
-              <p className="w-[320px] h-4.25 flex items-center gap-1 justify-center text-grayscale-500 text-body-xs">
+              <p className="max-w-[320px] h-4.25 flex items-center gap-1 justify-center text-grayscale-500 text-body-xs">
                 Drag and drop or{" "}
                 <span className="text-[#281ED2] underline">Upload file</span>
               </p>
@@ -102,10 +117,112 @@ function Input({
           )}
         </label>
         {error ? (
-          <h3 className="text-helper-s-regular flex items-center justify-start w-[320px] h-3.75 text-error ">
+          <h3 className="text-helper-s-regular flex items-center justify-start max-w-[320px] h-3.75 text-error ">
             {error}
           </h3>
         ) : null}
+      </div>
+    );
+  } else if (type === "age") {
+    return (
+      <div className="gap-0.5 flex flex-col">
+        <div className="gap-1.25 flex flex-col">
+          <div className="gap-2 flex flex-col">
+            <label htmlFor={id}>
+              <p
+                className={`text-body-xs ${error ? "text-error" : "text-grayscale-700"}  w-[85px] h-4.25`}
+              >
+                {label}
+              </p>
+            </label>
+            <div
+              className={`h-12 ${disabled ? "bg-grayscale-100 border-grayscale-200" : error ? "border-error" : value !== "" && success ? "border-success" : value !== "" ? "border-grayscale-400" : "border-grayscale-200  hover:border-grayscale-300"} text-grayscale-300 cursor-auto flex-col flex text-body-xs  rounded-lg border-[1.5px] py-3  pr-3.75  pl-3.25 gap-2.5`}
+            >
+              <div className="flex  gap-1.25  justify-between">
+                <select
+                  className={` ${disabled ? "text-grayscale-300" : error ? "text-error" : " hover:placeholder:text-grayscale-200 focus:placeholder:text-grayscale-100 placeholder:text-grayscale-400"} gap-1 outline-none bg-transparent w-full`}
+                  name={name}
+                  disabled={disabled}
+                  onChange={onChange}
+                  id={id}
+                  defaultValue={placeholder || ""}
+                >
+                  <option key={""} value={""}>
+                    Age
+                  </option>
+                  {Array.from({ length: 120 }, (_, i) => i + 1).map((age) => (
+                    <option key={age} value={age}>
+                      {age}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {error ? (
+              <h3 className="text-helper-s-regular flex items-center justify-start max-w-[320px] h-3.75 text-error ">
+                {error}
+              </h3>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    );
+  } else if (type === "mobile") {
+    return (
+      <div className="gap-0.5 flex flex-col">
+        <div className="gap-1.25 flex flex-col">
+          <div className="gap-2 flex flex-col">
+            <label htmlFor={id}>
+              <p
+                className={`text-body-xs ${error ? "text-error" : "text-grayscale-700"}  w-[267px] h-4.25`}
+              >
+                {label}
+              </p>
+            </label>
+            <div
+              className={`h-12 ${disabled ? "bg-grayscale-100 border-grayscale-200" : error ? "border-error" : value !== "" && success ? "border-success" : value !== "" ? "border-grayscale-400" : "border-grayscale-200  hover:border-grayscale-300"} text-grayscale-300 cursor-auto flex-col flex text-body-xs  rounded-lg border-[1.5px] py-3  pr-3.75  pl-3.25 gap-2.5`}
+            >
+              <div className="flex w-full gap-1.25 items-center justify-between">
+                {
+                  <div className="flex w-fit h-fit gap-1">
+                    <div className="flex justify-between items-center w-fit h-fit gap-1">
+                      <h4 className="w-[36px] h-[17px] text-body-xs text-grayscale-200">
+                        +995
+                      </h4>
+                      <div className="h-0 w-4.5 -rotate-90  border-[1.5px] border-grayscale-400"></div>
+                    </div>
+                  </div>
+                }
+                <input
+                  className={` ${disabled ? "text-grayscale-300" : error ? "text-error" : "hover:placeholder:text-grayscale-200 focus:placeholder:text-grayscale-100 placeholder:text-grayscale-400"} gap-1 outline-none bg-transparent w-full`}
+                  type="text"
+                  name={name}
+                  disabled={disabled}
+                  id={id}
+                  value={value}
+                  onChange={onChange}
+                  placeholder={placeholder}
+                />
+                {Icon ? (
+                  <button
+                    type="button"
+                    disabled
+                    className={` "cursor-auto" } ${success ? "stroke-success" : error ? "stroke-error" : " active:stroke-grayscale-400  stroke-grayscale-300"}`}
+                  >
+                    <Icon />
+                  </button>
+                ) : null}
+              </div>
+            </div>
+
+            {error ? (
+              <h3 className="text-helper-s-regular flex items-center justify-start max-w-[320px] h-3.75 text-error ">
+                {error}
+              </h3>
+            ) : null}
+          </div>
+        </div>
       </div>
     );
   } else {
@@ -115,24 +232,35 @@ function Input({
           <div className="gap-2 flex flex-col">
             <label htmlFor={id}>
               <p
-                className={`text-body-xs ${error ? "text-error" : "text-grayscale-700"}  w-[320px] h-4.25`}
+                className={`text-body-xs ${error ? "text-error" : "text-grayscale-700"}  max-w-[320px] h-4.25`}
               >
                 {label}
               </p>
             </label>
             <div
-              className={`h-12 ${error ? "border-error" : value !== "" ? "border-grayscale-400" : "border-grayscale-200  hover:border-grayscale-300"} cursor-auto flex-col flex text-body-xs  rounded-lg border-[1.5px] py-3  pr-3.75  pl-3.25 gap-2.5`}
+              className={`h-12 ${(Icon ? localDisable : disabled) ? "bg-grayscale-100 border-grayscale-200" : error ? "border-error" : value !== "" && success ? "border-success" : "border-grayscale-200  hover:border-grayscale-300"} cursor-auto flex-col flex text-body-xs  rounded-lg border-[1.5px] py-3  pr-3.75  pl-3.25 gap-2.5`}
             >
               <div className="flex w-full gap-1.25  justify-between">
                 <input
-                  className={` ${error ? "text-error" : " hover:placeholder:text-grayscale-200 focus:placeholder:text-grayscale-100 placeholder:text-grayscale-400"} gap-1 outline-none bg-transparent w-full`}
+                  className={` ${(Icon ? localDisable : disabled) ? "text-grayscale-300" : error ? "text-error" : " hover:placeholder:text-grayscale-200 focus:placeholder:text-grayscale-100 placeholder:text-grayscale-400"} gap-1 outline-none bg-transparent w-full `}
                   type={typeDef}
                   name={name}
+                  disabled={Icon ? localDisable : disabled}
                   id={id}
                   value={value}
                   onChange={onChange}
                   placeholder={placeholder}
                 />
+                {Icon ? (
+                  <button
+                    type="button"
+                    disabled={disabled}
+                    onClick={(e) => toggleLocalDisable(e)}
+                    className={`${disabled ? "cursor-auto" : "cursor-pointer"} ${success ? "stroke-success" : error ? "stroke-error" : " active:stroke-grayscale-400  stroke-grayscale-300"}`}
+                  >
+                    <Icon />
+                  </button>
+                ) : null}
                 {type === "password" ? (
                   <button
                     type="button"
@@ -146,7 +274,7 @@ function Input({
             </div>
 
             {error ? (
-              <h3 className="text-helper-s-regular flex items-center justify-start w-[320px] h-3.75 text-error ">
+              <h3 className="text-helper-s-regular flex items-center justify-start max-w-[320px] h-3.75 text-error ">
                 {error}
               </h3>
             ) : null}
