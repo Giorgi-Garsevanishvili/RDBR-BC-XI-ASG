@@ -17,7 +17,7 @@ function Footer() {
   const { loggedIn } = useAuth();
   const { openModal } = useModal();
   return (
-    <footer className="w-full  border-t flex justify-center items-center flex-col bg-grayscale-100 border-grayscale-200">
+    <footer className="w-full mt-16 border-t flex justify-center items-center flex-col bg-grayscale-100 border-grayscale-200">
       <div className=" w-391.5  border-t border-[#F5F5F5]" />
       <div className="pb-5 pt-20 gap-18.5 w-391.5 flex flex-col">
         <div className="flex justify-between">

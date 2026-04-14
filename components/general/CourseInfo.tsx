@@ -2,34 +2,102 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Breadcrumb from "./Breadcrumb";
+import Image from "next/image";
+import ClockIcon from "../ui/ClockIndividual";
+import CalendarEmptyIcon from "../ui/CalendarEmptyIcon";
+import RatingFullStar from "../ui/RatingFullStar";
+import Chips from "./Chips";
+import EnrollComponent from "./EnrollComponent";
 
 type FeaturedCoursesData = {
-  id: 1;
+  id: number;
   title: string;
   description: string;
   image: string;
-  basePrice: string;
+  basePrice: number;
   durationWeeks: number;
-  isFeatured: boolean;
-  avgRating: number;
-  reviewCount: number;
+  isFeatured: true;
+  reviews: [
+    {
+      userId: number;
+      rating: number;
+    },
+  ];
+  isRated: true;
   category: {
     id: number;
     name: string;
+    icon: string;
   };
   topic: {
     id: number;
     name: string;
+    categoryId: number;
   };
   instructor: {
-    id: string;
+    id: number;
     name: string;
     avatar: string;
+  };
+  enrollment: {
+    id: number;
+    quantity: number;
+    totalPrice: number;
+    progress: number;
+    completedAt: string;
+    course: {
+      id: number;
+      title: string;
+      description: string;
+      image: string;
+      basePrice: number;
+      durationWeeks: number;
+      isFeatured: boolean;
+      avgRating: number;
+      reviewCount: number;
+      category: {
+        id: number;
+        name: string;
+        icon: string;
+      };
+      topic: {
+        id: number;
+        name: string;
+        categoryId: number;
+      };
+      instructor: {
+        id: number;
+        name: string;
+        avatar: string;
+      };
+    };
+    schedule: {
+      weeklySchedule: {
+        id: number;
+        label: string;
+        days: [string, string];
+      };
+      timeSlot: {
+        id: number;
+        label: string;
+        startTime: string;
+        endTime: string;
+      };
+      sessionType: {
+        id: number;
+        courseScheduleId: number;
+        name: string;
+        priceModifier: number;
+        availableSeats: number;
+        location: string;
+      };
+      location: string;
+    };
   };
 };
 
 function CourseInfo({ id }: { id: string }) {
-  const [featuredCourses, setFeaturedCourse] = useState<FeaturedCoursesData>();
+  const [course, setCourse] = useState<FeaturedCoursesData>();
 
   const getFeaturedCourses = async () => {
     try {
@@ -37,7 +105,7 @@ function CourseInfo({ id }: { id: string }) {
         `https://api.redclass.redberryinternship.ge/api/courses/${id}`,
       );
 
-      setFeaturedCourse(data.data.data);
+      setCourse(data.data.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("ERROR:", error.response?.data);
@@ -51,32 +119,95 @@ function CourseInfo({ id }: { id: string }) {
     getFeaturedCourses();
   }, []);
   return (
-    <div>
-      <Breadcrumb categoryName={featuredCourses?.category.name} />
-      {featuredCourses ? (
-        <div className="flex flex-col justify-center items-center">
-          {Object.entries(featuredCourses).map(([key, value]) => (
-            <div key={key} className="mb-2">
-              <span className="font-bold">{key}:</span>{" "}
-              {typeof value === "object" && value !== null ? (
-                <div className="pl-4">
-                  {Object.entries(value).map(([nestedKey, nestedValue]) => (
-                    <div key={nestedKey}>
-                      <span className="font-semibold">{nestedKey}:</span>{" "}
-                      {String(nestedValue)}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                String(value)
+    <>
+      <div className="flex flex-col sticky w-225.75 shrink-0 h-fit gap-6 ">
+        <div className="flex flex-col justify-between w-full h-fit gap-8">
+          <Breadcrumb categoryName={course?.category.name} />
+          <div className="flex w-full items-center h-fit gap-4">
+            <h1 className="w-fit h-fit text-center text-h1 text-grayscale-900">
+              {course?.title}
+            </h1>
+          </div>
+        </div>
+        <div className="flex flex-col relative w-full h-fit gap-4.5">
+          <div className="flex flex-col shrink-0 w-full h-fit gap-4.5">
+            <div className="w-full overflow-hidden relative bg-gray-500 h-118.5 rounded-[10px] gap-2.5">
+              {course?.image && (
+                <Image
+                  src={course?.image}
+                  alt="Course Image"
+                  fill
+                  className="object-cover flex w-full h-full"
+                />
               )}
             </div>
-          ))}
+            <div className="flex w-full h-fit items-center gap-4 ">
+              <div className="flex w-full items-center h-fit gap-3">
+                <div className="flex w-full h-fit justify-between">
+                  <div className="flex items-center justify-between w-fit h-fit gap-3">
+                    <div className="flex h-fit justify-between items-center w-fit gap-1">
+                      <CalendarEmptyIcon />
+                      <p className="text-center text-grayscale-600 text-body-sm">
+                        {course?.durationWeeks} Weeks
+                      </p>
+                    </div>
+                    <div className="flex h-fit justify-between items-center w-fit gap-1">
+                      <ClockIcon />
+                      <p className="text-center text-grayscale-600 text-body-sm">
+                        {course?.durationWeeks ? course?.durationWeeks * 24 : 0}{" "}
+                        Hours
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-center items-center gap-1">
+                    <RatingFullStar className="w-6.5 h-6.5" />
+                    <h5 className="w-5.5 h-4.25 text-body-xs text-grayscale-600">
+                      {course?.reviews?.length
+                        ? (
+                            course.reviews.reduce(
+                              (acc, cur) => acc + cur.rating,
+                              0,
+                            ) / course.reviews.length
+                          ).toFixed(1)
+                        : "0.0"}
+                    </h5>
+                  </div>
+                </div>
+                <Chips
+                  filterId={course?.category.id}
+                  disabled
+                  Icon={course?.category.icon}
+                  title={course?.category.name ? course?.category.name : ""}
+                  isActive={false}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between flex-col w-full h-fit gap-4.5">
+            <Chips
+              disabled
+              type="instructor"
+              filterId={course?.instructor.id}
+              avatar={course?.instructor.avatar}
+              title={course?.instructor.name ? course.instructor.name : ""}
+            />
+            <div className="flex flex-col w-full h-fit gap-4.5">
+              <div className="flex flex-col w-full h-fit gap-6 justify-between">
+                <p className="w-fit text-grayscale-400 h-fit  leading-6 text-h4 ">
+                  Course Description
+                </p>
+                <p className="w-fit text-grayscale-600 h-fit leading-6 text-body-sm ">
+                  {course?.description}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      ) : (
-        "nothingFound"
+      </div>
+      {course?.id && (
+        <EnrollComponent priceData={course.basePrice} courseId={course?.id} />
       )}
-    </div>
+    </>
   );
 }
 

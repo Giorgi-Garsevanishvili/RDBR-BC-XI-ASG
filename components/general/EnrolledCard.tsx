@@ -1,5 +1,4 @@
 import Image from "next/image";
-import courseDefaultImage from "../../public/CourseImageDefault.svg";
 import RatingFullStar from "../ui/RatingFullStar";
 import CTA_Button_Outlined from "./CTA_Button_Outlined";
 import CalendarIcon from "../ui/CalendarIcon";

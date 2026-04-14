@@ -53,15 +53,14 @@ function BrowseCoursesCards({ course }: { course: CourseDataType }) {
     redirect(`/browse/${course.id}`);
   };
   return (
-    <div className="flex flex-col rounded-xl p-5 gap-6 bg-grayscale-50 border border-grayscale-100 w-[373px] h-fit hover:border-[#B7B3F4] transition-all duration-300 ease-out hover:shadow-[0px_0px_15px_0px_#8A82D433] active:border-[#958FEF] active:shadow-[0px_0px_15px_0px_#8A82D440]">
+    <div className="flex flex-col rounded-xl p-5 gap-6 bg-grayscale-50 border border-grayscale-100 w-93.25 h-fit hover:border-[#B7B3F4] transition-all duration-300 ease-out hover:shadow-[0px_0px_15px_0px_#8A82D433] active:border-[#958FEF] active:shadow-[0px_0px_15px_0px_#8A82D440]">
       <div className="flex flex-col w-full h-fit gap-4.5">
         <div className="flex flex-col w-full h-fit gap-4.5">
-          <div className="w-full h-45.25 flex overflow-hidden">
+          <div className="w-full relative h-45.25 flex overflow-hidden">
             <Image
               src={course.image}
               alt="/"
-              width={466}
-              height={181}
+              fill
               className="rounded-[10px]  gap-2.5 object-cover "
             />
           </div>
@@ -91,8 +90,10 @@ function BrowseCoursesCards({ course }: { course: CourseDataType }) {
               </div>
               <div className="flex gap-2 w-full h-fit">
                 <Chips
+                  filterId={course.category.id}
+                  isActive={false}
                   title={course.category.name}
-                  Icon={ImgDataValues[course.category.icon]}
+                  Icon={course.category.icon}
                 />
               </div>
             </div>

@@ -126,14 +126,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log(AuthToken);
 
       const response = await axios.post(
-        "https://api.redclass.redberryinternship.ge/api/logout",null,
+        "https://api.redclass.redberryinternship.ge/api/logout",
+        null,
         { headers: { Authorization: `Bearer ${AuthToken}` } },
       );
 
       localStorage.removeItem("user");
       localStorage.removeItem("token");
 
-      console.log("success", response);
+      reCheck();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const data = error.response?.data;

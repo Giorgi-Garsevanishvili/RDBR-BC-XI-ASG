@@ -256,7 +256,7 @@ function Input({
                     type="button"
                     disabled={disabled}
                     onClick={(e) => toggleLocalDisable(e)}
-                    className={`${disabled ? "cursor-auto" : "cursor-pointer"} ${success ? "stroke-success" : error ? "stroke-error" : " active:stroke-grayscale-400  stroke-grayscale-300"}`}
+                    className={`${disabled ? "cursor-auto" : "cursor-pointer"} ${disabled || localDisable ? "stroke-grayscale-300" : success ? "stroke-success" : error ? "stroke-error" : " active:stroke-grayscale-400  stroke-grayscale-300"}`}
                   >
                     <Icon />
                   </button>

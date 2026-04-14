@@ -16,6 +16,7 @@ import axios from "axios";
 import ModalUserIcon from "../ui/ModalUserIcon";
 import CTA_Button_Outlined from "./CTA_Button_Outlined";
 import SuccessIcon from "../ui/SuccessIcon";
+import { RiLogoutCircleLine } from "react-icons/ri";
 
 export type UserUpdateType = {
   full_name: string;
@@ -373,7 +374,7 @@ function MyProfileComponent() {
           onClick={(e) => handleSignOut(e)}
           className="cursor-pointer absolute flex top-0 left-0"
         >
-          <HybridIcon className="w-4.5 h-4.5" />
+          <RiLogoutCircleLine className="text-grayscale-400" size={22} />
         </button>
       </div>
       <div className="flex flex-col w-full gap-6">

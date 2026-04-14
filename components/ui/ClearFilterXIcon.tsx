@@ -11,7 +11,7 @@ function ClearFilterXIcon() {
     >
       <path
         d="M5.75 5.75L0.75 0.75M5.75 5.75L10.75 10.75M5.75 5.75L10.75 0.75M5.75 5.75L0.75 10.75"
-        stroke="#8A8A8A"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
