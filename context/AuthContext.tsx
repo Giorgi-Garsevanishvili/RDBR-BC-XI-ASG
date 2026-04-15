@@ -123,7 +123,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     try {
       const AuthToken = localStorage.getItem("token");
-      console.log(AuthToken);
 
       const response = await axios.post(
         "https://api.redclass.redberryinternship.ge/api/logout",

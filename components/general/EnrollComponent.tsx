@@ -1,34 +1,32 @@
 "use client";
 import EnrollStepWrapper from "./EnrollStepWrapper";
-import TotalPriceComp from "./TotalPriceComp";
+import EnrollSummary from "./EnrollSummary";
 import WeeklyScheduleComp from "./WeeklyScheduleComp";
 import SessionComp from "./SessionComp";
 import TimeSlotComp from "./TimeSlotComp";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import CourseWarning from "./CourseWarning";
+
 type FlowType = {
   step: number;
   filled: boolean;
 };
 
-type EnrollDataType = {
-  courseId: number | null;
-  courseScheduleId: number | null;
-  force: boolean;
-};
-
-type FlowIdListType = {
+export type FlowIdListType = {
   weekDayId: number | null;
   timeSlotId: number | null;
   sessionTypeId: number | null;
   sessionType: string | null;
+  courseScheduleId: number | null;
 };
 
-type AvailableWeekDaysType = {
+export type AvailableWeekDaysType = {
   id: number;
   label: string;
   days: string[];
+  disabled?: boolean;
 };
 
 const initialFlow: FlowType = {
@@ -36,51 +34,110 @@ const initialFlow: FlowType = {
   filled: false,
 };
 
-const initialEnrollData = {
-  courseId: null,
-  courseScheduleId: null,
-  force: false,
-};
-
 const initialFlowIdList: FlowIdListType = {
   weekDayId: null,
   timeSlotId: null,
   sessionTypeId: null,
+  courseScheduleId: null,
   sessionType: null,
 };
 
-const initialWeeklySlotData = [
-  { id: 1, label: "monday - wednesday", days: ["monday", "wednesday"] },
-  { id: 1, label: "tuesday - thursday", days: ["tuesday", "thursday"] },
-  { id: 3, label: "wednesday - friday", days: ["wednesday", "friday"] },
-  { id: 4, label: "weekend", days: ["weekend", "weekend"] },
-];
-const InitialTimeSlotData = [
-  { id: 123, label: "morning", startTime: "9.00 AM", endTime: "12:00 PM" },
-  { id: 123, label: "afternoon", startTime: "12:00 AM", endTime: "6:00 PM" },
-  { id: 123, label: "evening", startTime: "6:00 AM", endTime: "9:00 PM" },
-];
-const InitialSessionTypeData = [
-  { id: 123, label: "monday - friday", days: ["", ""] },
-  { id: 123, label: "Monday -Friday", days: ["", ""] },
-  { id: 123, label: "Monday -Friday", days: ["", ""] },
-];
-
-type AvailableTimeSlot = {
+export type AvailableTimeSlot = {
   id: number;
   label: string;
   startTime: string;
   endTime: string;
+  disabled: boolean;
 };
 
-type AvailableSessionType = {
+export type AvailableSessionType = {
   id: number;
   courseScheduleId: number;
   name: string;
   priceModifier: number;
   availableSeats: number;
-  location: string;
+  location: string | null | undefined;
+  disabled: boolean;
 };
+
+const initialWeeklySlotData = [
+  {
+    id: 1,
+    label: "Monday - Wednesday",
+    days: ["monday", "wednesday"],
+    disabled: true,
+  },
+  {
+    id: 2,
+    label: "Tuesday - Thursday",
+    days: ["tuesday", "thursday"],
+    disabled: true,
+  },
+  {
+    id: 3,
+    label: "Friday - Saturday",
+    days: ["friday", "saturday"],
+    disabled: true,
+  },
+  {
+    id: 4,
+    label: "Weekend Only",
+    days: ["saturday", "sunday"],
+    disabled: true,
+  },
+];
+const InitialTimeSlotData = [
+  {
+    id: 1,
+    label: "Morning (9:00 AM - 11:00 AM)",
+    startTime: "09:00:00",
+    endTime: "11:00:00",
+    disabled: true,
+  },
+  {
+    id: 2,
+    label: "Afternoon (2:00 PM - 4:00 PM)",
+    startTime: "14:00:00",
+    endTime: "16:00:00",
+    disabled: true,
+  },
+  {
+    id: 3,
+    label: "Evening (6:00 PM - 8:00 PM)",
+    startTime: "18:00:00",
+    endTime: "20:00:00",
+    disabled: true,
+  },
+];
+const initialSessionData = [
+  {
+    id: 1,
+    courseScheduleId: 0,
+    name: "online",
+    priceModifier: 0.0,
+    availableSeats: 0,
+    location: null,
+    disabled: true,
+  },
+  {
+    id: 2,
+    courseScheduleId: 0,
+    name: "in_person",
+    priceModifier: 50.0,
+    availableSeats: 0,
+    location: null,
+    disabled: true,
+  },
+  {
+    id: 3,
+    courseScheduleId: 0,
+    name: "hybrid",
+    priceModifier: 30.0,
+    availableSeats: 0,
+    location: null,
+    disabled: true,
+  },
+];
 
 function EnrollComponent({
   courseId,
@@ -97,8 +154,6 @@ function EnrollComponent({
   const [availableSessionType, setAvailableSessionType] =
     useState<AvailableSessionType[]>();
   const [flow, setFlow] = useState<FlowType>(initialFlow);
-  const [enrollData, setEnrollData] =
-    useState<EnrollDataType>(initialEnrollData);
   const [flowIdList, setFlowIdList] =
     useState<FlowIdListType>(initialFlowIdList);
 
@@ -111,14 +166,15 @@ function EnrollComponent({
         [key]: isSame ? null : value, // toggle
       };
 
-      // reset dependent steps 👇
       if (key === "weekDayId") {
         newState.timeSlotId = null;
         newState.sessionTypeId = null;
+        newState.courseScheduleId = null;
       }
 
       if (key === "timeSlotId") {
         newState.sessionTypeId = null;
+        newState.courseScheduleId = null;
       }
 
       return newState;
@@ -137,8 +193,6 @@ function EnrollComponent({
       getTimeSessionType();
     } else {
       setFlow({ step: 3, filled: true });
-      getWeekDays();
-      console.log(flowIdList);
     }
   }, [flowIdList]);
 
@@ -148,13 +202,32 @@ function EnrollComponent({
         `https://api.redclass.redberryinternship.ge/api/courses/${courseId}/weekly-schedules`,
       );
 
-      const data = response.data.data as AvailableWeekDaysType[];
+      const dbData = response.data.data as AvailableWeekDaysType[];
 
-      data.map((item) => initialWeeklySlotData.push(item));
+      const merged = initialWeeklySlotData.map((initialSlot) => {
+        const match = dbData.find(
+          (dbSlot) =>
+            dbSlot.days[0] === initialSlot.days[0] &&
+            dbSlot.days[1] === initialSlot.days[1],
+        );
 
-      console.log(availableWeekDays);
+        if (match) {
+          return {
+            ...initialSlot, // keep your UI label
+            ...match, // take id from DB (important!)
+            disabled: false, // enable
+          };
+        }
+
+        return {
+          ...initialSlot,
+          disabled: true, // keep disabled
+        };
+      });
+
+      setAvailableWeekdays(merged);
     } catch (error) {
-      console.log(error);
+      return;
     }
   };
 
@@ -163,22 +236,100 @@ function EnrollComponent({
       const response = await axios.get(
         `https://api.redclass.redberryinternship.ge/api/courses/${courseId}/time-slots?weekly_schedule_id=${flowIdList.weekDayId}`,
       );
-      setAvailableTimeSlots(response.data.data);
+
+      const dbData = response.data.data as AvailableTimeSlot[];
+
+      const merged = InitialTimeSlotData.map((initialSlot) => {
+        const match = dbData.find(
+          (dbSlot) =>
+            dbSlot.label.trim().toLocaleLowerCase() ===
+            initialSlot.label.toLowerCase().trim(),
+        );
+
+        if (match) {
+          return {
+            ...initialSlot, // keep your UI label
+            ...match, // take id from DB (important!)
+            disabled: false, // enable
+          };
+        }
+
+        return {
+          ...initialSlot,
+          disabled: true, // keep disabled
+        };
+      });
+
+      setAvailableTimeSlots(merged);
     } catch (error) {
-      console.log(error);
+      return;
     }
   };
+
   const getTimeSessionType = async () => {
     try {
       const response = await axios.get(
         `https://api.redclass.redberryinternship.ge/api/courses/${courseId}/session-types?weekly_schedule_id=${flowIdList.weekDayId}&time_slot_id=${flowIdList.timeSlotId}`,
       );
-      setAvailableSessionType(response.data.data);
+
+      const dbData = response.data.data as AvailableSessionType[];
+
+      const getMatch = (name: string) =>
+        dbData.find(
+          (dbSlot) =>
+            dbSlot.name.toLowerCase().trim() === name.toLowerCase().trim(),
+        );
+
+      const getFallbackLocation = (name: string) => {
+        const n = name.toLowerCase().trim();
+
+        // 🔁 cross fallback rule
+        if (n === "in_person") {
+          return (
+            getMatch("hybrid")?.location ||
+            getMatch("in_person")?.location ||
+            null
+          );
+        }
+
+        if (n === "hybrid") {
+          return (
+            getMatch("in_person")?.location ||
+            getMatch("hybrid")?.location ||
+            null
+          );
+        }
+
+        if (n === "online") {
+          return getMatch("online")?.location;
+        }
+
+        return null;
+      };
+
+      const merged = initialSessionData.map((initialSlot) => {
+        const match = getMatch(initialSlot.name);
+
+        if (!match) {
+          return {
+            ...initialSlot,
+            location: getFallbackLocation(initialSlot.name),
+            disabled: true,
+          };
+        }
+
+        return {
+          ...initialSlot,
+          ...match,
+          disabled: false,
+        };
+      });
+
+      setAvailableSessionType(merged);
     } catch (error) {
-      console.log(error);
+      return;
     }
   };
-
   return (
     <div className="flex flex-col items-center sticky left-303 mt-30 w-132.5 h-fit gap-2.75 shrink-0">
       <div className="flex w-fit h-fit">
@@ -214,7 +365,9 @@ function EnrollComponent({
               updateFlow={updateFlow}
               Slots={SessionComp}
             />
-            <TotalPriceComp
+            <EnrollSummary
+              courseId={courseId}
+              courseScheduleId={flowIdList.courseScheduleId}
               basePrice={priceData}
               step={flow.step}
               sessionType={flowIdList.sessionType}
@@ -222,7 +375,7 @@ function EnrollComponent({
           </div>
         </div>
       </div>
-      <div>warn</div>
+      <CourseWarning />
     </div>
   );
 }

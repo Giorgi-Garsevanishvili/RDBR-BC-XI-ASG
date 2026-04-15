@@ -1,15 +1,17 @@
-import React, { ButtonHTMLAttributes, ReactNode } from "react";
+import React, { ButtonHTMLAttributes, ElementType, ReactNode } from "react";
 
 function CTA_Button_Outlined({
   title,
   disabled,
   className,
   action,
+  Icon
 }: {
   title: string;
   disabled?: boolean;
   className: string;
   action?: () => void;
+  Icon?: ElementType
 }) {
   return (
     <button

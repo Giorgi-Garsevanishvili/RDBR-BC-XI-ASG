@@ -1,13 +1,12 @@
 import React, { ComponentType } from "react";
 import CompArrow from "../ui/CompArrow";
-import IconOneEmpty from "../ui/IconOneEmpty";
 import StepOneFullIcon from "../ui/IconOneFull";
 import StepOneEmptyIcon from "../ui/IconOneEmpty";
 import StepTwoFullIcon from "../ui/IconTwoFull";
 import StepTwoEmptyIcon from "../ui/IconTwoEmpty";
 import StepThreeFullIcon from "../ui/IconThreeFull";
 import StepThreeEmptyIcon from "../ui/IconThreeEmpty";
-import SessionComp from "./SessionComp";
+import { FlowIdListType } from "./EnrollComponent";
 
 type StepStatus = "true" | "false";
 const StepIcons: Record<
@@ -17,13 +16,6 @@ const StepIcons: Record<
   1: { true: StepOneFullIcon, false: StepOneEmptyIcon },
   2: { true: StepTwoFullIcon, false: StepTwoEmptyIcon },
   3: { true: StepThreeFullIcon, false: StepThreeEmptyIcon },
-};
-
-type FlowIdListType = {
-  weekDayId: number | null;
-  timeSlotId: number | null;
-  sessionTypeId: number | null;
-  sessionType: string | null;
 };
 
 function EnrollStepWrapper<T>({

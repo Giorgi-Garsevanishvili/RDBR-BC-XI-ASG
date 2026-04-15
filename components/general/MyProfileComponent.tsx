@@ -284,8 +284,6 @@ function MyProfileComponent() {
           />,
         );
       }
-
-      console.log(response);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const data = error.response?.data;

@@ -106,6 +106,9 @@ function CourseInfo({ id }: { id: string }) {
       );
 
       setCourse(data.data.data);
+
+      console.log(data.data.data);
+      
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("ERROR:", error.response?.data);
@@ -204,9 +207,9 @@ function CourseInfo({ id }: { id: string }) {
           </div>
         </div>
       </div>
-      {course?.id && (
+      {course?.enrollment === null || course?.enrollment.progress === 100 ?
         <EnrollComponent priceData={course.basePrice} courseId={course?.id} />
-      )}
+      : "You already Enrolled"}
     </>
   );
 }

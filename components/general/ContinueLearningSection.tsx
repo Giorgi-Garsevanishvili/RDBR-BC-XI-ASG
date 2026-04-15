@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import React from "react";
 import CourseCardProgress from "./CourseCardProgress";
 import { useAuth } from "@/context/AuthContext";
@@ -16,6 +15,7 @@ function ContinueLearningSection() {
     e.preventDefault();
     loggedIn ? openModal(<EnrolledCoursesSidebar />) : openModal(<LogIn />);
   };
+  
   return (
     <section className="h-92.25 w-full items-center flex flex-col gap-8">
       <div className="flex flex-col w-full pl-px gap-2.5">

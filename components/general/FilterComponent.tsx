@@ -74,8 +74,6 @@ function FilterComponent() {
         `https://api.redclass.redberryinternship.ge/api/topics?${params.toString()}`,
       );
 
-      console.log(params.toString());
-
       setTopics(response.data.data);
     } catch (error) {
       console.log(error);
@@ -88,7 +86,6 @@ function FilterComponent() {
         "https://api.redclass.redberryinternship.ge/api/instructors",
       );
       setInstructors(response.data.data);
-      console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
