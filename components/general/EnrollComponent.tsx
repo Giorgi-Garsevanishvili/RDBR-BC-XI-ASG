@@ -46,8 +46,25 @@ const initialFlowIdList: FlowIdListType = {
   weekDayId: null,
   timeSlotId: null,
   sessionTypeId: null,
-  sessionType: null
+  sessionType: null,
 };
+
+const initialWeeklySlotData = [
+  { id: 1, label: "monday - wednesday", days: ["monday", "wednesday"] },
+  { id: 1, label: "tuesday - thursday", days: ["tuesday", "thursday"] },
+  { id: 3, label: "wednesday - friday", days: ["wednesday", "friday"] },
+  { id: 4, label: "weekend", days: ["weekend", "weekend"] },
+];
+const InitialTimeSlotData = [
+  { id: 123, label: "morning", startTime: "9.00 AM", endTime: "12:00 PM" },
+  { id: 123, label: "afternoon", startTime: "12:00 AM", endTime: "6:00 PM" },
+  { id: 123, label: "evening", startTime: "6:00 AM", endTime: "9:00 PM" },
+];
+const InitialSessionTypeData = [
+  { id: 123, label: "monday - friday", days: ["", ""] },
+  { id: 123, label: "Monday -Friday", days: ["", ""] },
+  { id: 123, label: "Monday -Friday", days: ["", ""] },
+];
 
 type AvailableTimeSlot = {
   id: number;
@@ -65,9 +82,16 @@ type AvailableSessionType = {
   location: string;
 };
 
-function EnrollComponent({ courseId, priceData }: { courseId: number, priceData: number }) {
-  const [availableWeekDays, setAvailableWeekdays] =
-    useState<AvailableWeekDaysType[]>();
+function EnrollComponent({
+  courseId,
+  priceData,
+}: {
+  courseId: number;
+  priceData: number;
+}) {
+  const [availableWeekDays, setAvailableWeekdays] = useState<
+    AvailableWeekDaysType[]
+  >(initialWeeklySlotData);
   const [availableTimeSlots, setAvailableTimeSlots] =
     useState<AvailableTimeSlot[]>();
   const [availableSessionType, setAvailableSessionType] =
@@ -123,7 +147,12 @@ function EnrollComponent({ courseId, priceData }: { courseId: number, priceData:
       const response = await axios.get(
         `https://api.redclass.redberryinternship.ge/api/courses/${courseId}/weekly-schedules`,
       );
-      setAvailableWeekdays(response.data.data);
+
+      const data = response.data.data as AvailableWeekDaysType[];
+
+      data.map((item) => initialWeeklySlotData.push(item));
+
+      console.log(availableWeekDays);
     } catch (error) {
       console.log(error);
     }
@@ -185,7 +214,11 @@ function EnrollComponent({ courseId, priceData }: { courseId: number, priceData:
               updateFlow={updateFlow}
               Slots={SessionComp}
             />
-            <TotalPriceComp basePrice={priceData} step={flow.step} sessionType={flowIdList.sessionType}/>
+            <TotalPriceComp
+              basePrice={priceData}
+              step={flow.step}
+              sessionType={flowIdList.sessionType}
+            />
           </div>
         </div>
       </div>
