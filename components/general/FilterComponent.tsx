@@ -98,10 +98,10 @@ function FilterComponent() {
   }, [getTopics]);
 
   return (
-    <div className="flex flex-col w-[309px] shrink-0 sticky top-8 gap-6">
+    <div className="flex flex-col w-77.25 shrink-0 sticky top-8 gap-6">
       <div className="flex w-full justify-between flex-col h-fit gap-8">
         <div className="flex w-full h-fit justify-between items-center">
-          <h1 className="text-h1 w-[121px] h-[48px] text-grayscale-950">
+          <h1 className="text-h1 w-30.25 h-12 text-grayscale-950">
             Filters
           </h1>
           {activeCount > 0 && (
@@ -118,7 +118,7 @@ function FilterComponent() {
           {/**Categories */}
 
           <div className="flex flex-col justify-between w-full h-fit gap-6">
-            <h3 className="w-[309px] h-[22px] text-body-md text-grayscale-500">
+            <h3 className="w-77.25 h-5.5 text-body-md text-grayscale-500">
               Categories
             </h3>
             <div className="flex w-full h-fit gap-2">
@@ -202,7 +202,7 @@ function FilterComponent() {
         </div>
         <div className="flex w-full h-fit border-t pt-4 border-grayscale-300">
           <div className="flex w-full h-5 justify-between pr-[179.59px]">
-            <p className="text-center w-[101px] h-[17px] top-[0.5px] text-body-xs text-gray-400">
+            <p className="text-center w-25.25 h-4.25 top-[0.5px] text-body-xs text-gray-400">
               {activeCount} Filters Active
             </p>
           </div>

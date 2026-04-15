@@ -12,11 +12,11 @@ function EmptyEnrollment() {
         <div className="w-full flex-col items-center justify-center flex h-fit gap-3">
           <div className="flex flex-col items-center justify-center w-full h-fit gap-6">
             <div className="flex flex-col items-center justify-center w-full h-fit gap-2">
-              <p className="w-[448px] h-[29px] items-center justify-center flex text-h3 text-[#130E67]">
+              <p className="w-md h-7.25 items-center justify-center flex text-h3 text-[#130E67]">
                 No Enrolled Courses Yet
               </p>
-              <div className="flex relative items-center justify-center w-[448px] h-[48px]">
-                <p className="w-[274px] text-center text-body-xs text-[#130E67] flex absolute -top-[1] left-[87px] h-[48px]">
+              <div className="flex relative items-center justify-center w-md h-12">
+                <p className="w-68.5 text-center text-body-xs text-[#130E67] flex absolute -top-[1] left-21.75 h-12">
                   Your learning journey starts here! Browse courses to get
                   started.
                 </p>

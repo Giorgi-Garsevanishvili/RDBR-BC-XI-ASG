@@ -33,7 +33,7 @@ function ContinueLearningSection() {
           <div className="content-end items-end flex grow text-[#4F46E5] text-underlined-md ">
             <button
               type="button"
-              className="w-[66px] cursor-pointer h-[24px]"
+              className="w-16.5 cursor-pointer h-6"
               onClick={(e) => handleSeeAll(e)}
             >
               See All

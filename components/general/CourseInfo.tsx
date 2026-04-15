@@ -8,6 +8,7 @@ import CalendarEmptyIcon from "../ui/CalendarEmptyIcon";
 import RatingFullStar from "../ui/RatingFullStar";
 import Chips from "./Chips";
 import EnrollComponent from "./EnrollComponent";
+import { useAuth } from "@/context/AuthContext";
 
 type FeaturedCoursesData = {
   id: number;
@@ -98,17 +99,19 @@ type FeaturedCoursesData = {
 
 function CourseInfo({ id }: { id: string }) {
   const [course, setCourse] = useState<FeaturedCoursesData>();
+  const {token, loggedIn} = useAuth() 
+  
 
   const getFeaturedCourses = async () => {
     try {
       const data = await axios.get(
         `https://api.redclass.redberryinternship.ge/api/courses/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setCourse(data.data.data);
 
       console.log(data.data.data);
-      
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("ERROR:", error.response?.data);
@@ -120,7 +123,7 @@ function CourseInfo({ id }: { id: string }) {
 
   useEffect(() => {
     getFeaturedCourses();
-  }, []);
+  }, [loggedIn]);
   return (
     <>
       <div className="flex flex-col sticky w-225.75 shrink-0 h-fit gap-6 ">
@@ -207,9 +210,11 @@ function CourseInfo({ id }: { id: string }) {
           </div>
         </div>
       </div>
-      {course?.enrollment === null || course?.enrollment.progress === 100 ?
-        <EnrollComponent priceData={course.basePrice} courseId={course?.id} />
-      : "You already Enrolled"}
+      {course && course.enrollment === null ? (
+        <EnrollComponent priceData={course.basePrice} courseId={course.id} />
+      ) : (
+        course?.enrollment && "You already Enrolled"
+      )}
     </>
   );
 }

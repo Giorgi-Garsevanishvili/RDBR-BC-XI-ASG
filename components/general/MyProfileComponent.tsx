@@ -379,7 +379,7 @@ function MyProfileComponent() {
         <div className="flex flex-col w-full h-fit gap-4">
           <div className="flex flex-col justify-center items-center  w-full h-fit gap-6">
             <div className="w-full h-fit justify-center items-center flex flex-col gap-6">
-              <h2 className="w-[360px] h-[39px] text-center text-grayscale-900 text-h2">
+              <h2 className="w-90 h-9.75 text-center text-grayscale-900 text-h2">
                 Profile
               </h2>
               <div className="flex flex-col w-full h-fit gap-2">
@@ -391,14 +391,14 @@ function MyProfileComponent() {
                       />
                     </div>
                     <div className="flex flex-col justify-center w-full h-fit gap-1">
-                      <h4 className="w-[292px] h-[24.3px] text-h4 text-grayscale-950">
+                      <h4 className="w-73 h-[24.3px] text-h4 text-grayscale-950">
                         {user?.username}
                       </h4>
                       <div className="flex flex-col w-full h-fit pl-0.5 gap2.5">
                         <div className="flex flex-col w-fit h-fit gap-2.5">
                           <div className="flex w-fit h-fit gap-0.5">
                             <p
-                              className={`w-fit h-[12px] ${user?.profileComplete ? "text-success" : user?.profileComplete === undefined ? "text-error" : "text-warning"} text-helper-xs-regular`}
+                              className={`w-fit h-3 ${user?.profileComplete ? "text-success" : user?.profileComplete === undefined ? "text-error" : "text-warning"} text-helper-xs-regular`}
                             >
                               {user?.profileComplete
                                 ? "Profile is Complete"
@@ -487,7 +487,7 @@ function MyProfileComponent() {
             disabled={submitDisable}
             type="submit"
             title="Update Profile"
-            className="text-button-sm h-[47px] text-center flex justify-center items-center"
+            className="text-button-sm h-11.75 text-center flex justify-center items-center"
           />
         </div>
       </div>
