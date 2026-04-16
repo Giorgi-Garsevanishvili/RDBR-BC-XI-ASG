@@ -41,7 +41,7 @@ function CourseWarning() {
         </div>
       </div>
       <CTA_Button_Outlined
-        Icon={PaginationArrowIcon}
+        Icon={<PaginationArrowIcon />}
         action={() => handleButtonAction()}
         className="bg-[#EEEDFC] flex w-fit text-[#281ED2 items-center justify-between hover:text-[#281ED2] border-[#B7B3F4]  "
         title={`${loggedIn && !user?.profileComplete ? "Complete" : !loggedIn ? "Sign In" : null}`}

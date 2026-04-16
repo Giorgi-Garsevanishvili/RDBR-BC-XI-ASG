@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, ReactNode } from "react";
+import React, { ButtonHTMLAttributes, isValidElement, ReactNode } from "react";
 
 function CTA_Button({
   title,
@@ -6,12 +6,14 @@ function CTA_Button({
   className,
   action,
   type,
+  Icon,
 }: {
   type: "button" | "submit" | "reset";
   title: string;
   disabled?: boolean;
   className: string;
   action?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  Icon?: React.ReactElement;
 }) {
   return (
     <button
@@ -20,7 +22,10 @@ function CTA_Button({
       disabled={disabled}
       className={`px-6.25 ${className} transition-all ease-out duration-300 disabled:bg-[#ADADAD] disabled:text-[#8A8A8A] focus:bg-[#281ED2]  border-2 border-transparent disabled:cursor-auto focus:border-[#1E169D] active:bg-[#1E169D] hover:bg-[#281ED2]  cursor-pointer py-4.25 gap-2.5 bg-[#4F46E5] text-white rounded-lg`}
     >
-      <span className="align-middle w-fit h-fit">{title}</span>
+      <span className="align-middle flex items-center justify-center gap-1.5 w-fit h-fit">
+        {title}
+      </span>
+      {Icon}
     </button>
   );
 }

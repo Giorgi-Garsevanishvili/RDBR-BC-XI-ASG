@@ -5,14 +5,16 @@ function CompleteProfileWarningComponent({
   info,
   Icon,
   Buttons,
+  extra,
 }: {
   title: string;
   info?: string;
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> | React.ReactElement;
   Buttons?: ReactNode;
+  extra?: ReactNode;
 }) {
   return (
-    <div className="flex w-119 max-h-121.5 rounded-2xl p-15 gap-2.5 bg-grayscale-50">
+    <div className="flex w-119 min-max-h-121.5 rounded-2xl p-15 gap-2.5 bg-grayscale-50">
       <div className="flex flex-col w-full h-fit gap-10.5">
         <div className="flex flex-col justify-between items-center w-full h-fit gap-10">
           <div className="flex flex-col items-center justify-between w-full h-fit gap-6">
@@ -22,6 +24,7 @@ function CompleteProfileWarningComponent({
               {info && <p className="w-89 h-fit  text-body-lg ">{info}</p>}
             </div>
           </div>
+          {extra}
           <div className="flex w-full h-fit gap-2">{Buttons}</div>
         </div>
       </div>

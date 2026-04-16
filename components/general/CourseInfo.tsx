@@ -9,8 +9,18 @@ import RatingFullStar from "../ui/RatingFullStar";
 import Chips from "./Chips";
 import EnrollComponent from "./EnrollComponent";
 import { useAuth } from "@/context/AuthContext";
+import CourseTakenCard from "./CourseTakenCard";
+import CompleteProfileWarningComponent from "./CompleteProfileWarningComponent";
+import CTA_Button from "./CTA_Button";
+import RoundSuccessIcon from "../ui/RoundSuccessIcon";
+import { useModal } from "@/context/ModalContext";
+import CTA_Button_Outlined from "./CTA_Button_Outlined";
+import WarningIconSmall from "../ui/WarningIconSmall";
+import { ImSpinner7 } from "react-icons/im";
+import SuccessIcon from "../ui/SuccessIcon";
+import RatingComponent from "./RatingComponent";
 
-type FeaturedCoursesData = {
+export type CourseData = {
   id: number;
   title: string;
   description: string;
@@ -94,25 +104,137 @@ type FeaturedCoursesData = {
       };
       location: string;
     };
-  };
+  } | null;
+};
+
+type ConflictType = {
+  conflictingCourseName: string;
+  conflictingEnrollmentId: number;
+  requestedCourseId: number;
+  schedule: string;
 };
 
 function CourseInfo({ id }: { id: string }) {
-  const [course, setCourse] = useState<FeaturedCoursesData>();
-  const {token, loggedIn} = useAuth() 
-  
+  const [course, setCourse] = useState<CourseData>();
+  const { token, loggedIn } = useAuth();
+  const { openModal, closeModal } = useModal();
+  const [trigger, setTrigger] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [openRating, setOpenRating] = useState(true);
+
+  const formatDays = (dayPart: string) =>
+    dayPart
+      .split(" - ")
+      .map((d) => d.trim().slice(0, 3)) // Tue, Wed, Thu
+      .join(" - ");
+
+  const parseSchedule = (schedule: string) => {
+    const [dayPart, timePart] = schedule.split(" at ");
+
+    const match = timePart.match(/(.+)\((.+)\)/);
+
+    return {
+      days: formatDays(dayPart),
+      label: match?.[1]?.trim(),
+      time: match?.[2],
+    };
+  };
+
+  const handleEnrollForce = () => {
+    handleRetake({ force: true });
+    setTrigger((prev) => prev + 1);
+  };
+
+  const handleConflict = (data: ConflictType) => {
+    const date = parseSchedule(data.schedule);
+    openModal(
+      <CompleteProfileWarningComponent
+        Buttons={
+          <>
+            <CTA_Button_Outlined
+              action={() => handleEnrollForce()}
+              title="Continue Anyway"
+              className="w-fit h-14.5  items-center justify-center flex text-button-sm"
+            />
+            <CTA_Button
+              title="Cancel"
+              className="w-fit grow h-14.5  items-center justify-center flex text-button-sm"
+              type="button"
+              action={() => closeModal()}
+            />
+          </>
+        }
+        Icon={<WarningIconSmall className="w-23.5 h-23.5 text-warning" />}
+        title="Enrollment Conflict"
+        info={`You are already enrolled in ${data.conflictingCourseName} with the same schedule: ${date.days} at ${date.time}`}
+      />,
+    );
+  };
+
+  const handleSuccess = ({ name }: { name: string }) => {
+    openModal(
+      <CompleteProfileWarningComponent
+        Buttons={
+          <>
+            <CTA_Button
+              title="Done"
+              className="w-full grow h-14.5  items-center justify-center flex text-button-sm"
+              type="button"
+              action={() => closeModal()}
+            />
+          </>
+        }
+        Icon={<RoundSuccessIcon className="w-23.5 23.5 text-[#4F46E5]" />}
+        title="Enrollment Confirmed! "
+        info={`You've successfully enrolled to the “${name}” Course!`}
+      />,
+    );
+  };
+
+  const handleComplete = ({ name }: { name: string }) => {
+    openModal(
+      <CompleteProfileWarningComponent
+        Buttons={
+          <>
+            <CTA_Button
+              title="Done"
+              className="w-full grow h-14.5  items-center justify-center flex text-button-sm"
+              type="button"
+              action={() => closeModal()}
+            />
+          </>
+        }
+        extra={
+          
+          course?.id &&
+          !course.isRated && (
+            <RatingComponent
+              setOpenRating={setOpenRating}
+              openRating={openRating}
+              courseId={course?.id}
+              className="text-[#736BEA]"
+            />
+          )
+        }
+        Icon={<SuccessIcon />}
+        title="Congratulations"
+        info={`You've completed “${name}” Course!`}
+      />,
+    );
+  };
 
   const getFeaturedCourses = async () => {
     try {
+      setLoading(true);
       const data = await axios.get(
         `https://api.redclass.redberryinternship.ge/api/courses/${id}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setCourse(data.data.data);
-
-      console.log(data.data.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       if (axios.isAxiosError(error)) {
         console.log("ERROR:", error.response?.data);
       } else {
@@ -121,14 +243,95 @@ function CourseInfo({ id }: { id: string }) {
     }
   };
 
+  const handelCompleteCourse = async () => {
+    try {
+      setLoading(true);
+      const data = await axios.patch(
+        `https://api.redclass.redberryinternship.ge/api/enrollments/${course?.enrollment?.id}/complete`,
+        null,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      setCourse(data.data.data);
+      setTrigger((prev) => prev + 1);
+      setLoading(false);
+      console.log(data);
+
+      if (data.status === 200) {
+        handleComplete({ name: data.data.data.course.title });
+      }
+    } catch (error) {
+      setLoading(false);
+      if (axios.isAxiosError(error)) {
+        console.log("ERROR:", error.response?.data);
+      } else {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleRetake = async ({ force }: { force: boolean }) => {
+    try {
+      setLoading(true);
+      const scheduleIdData = await axios.get(
+        `https://api.redclass.redberryinternship.ge/api/courses/${course?.id}/session-types?weekly_schedule_id=${course?.enrollment?.schedule.weeklySchedule.id}&time_slot_id=${course?.enrollment?.schedule.sessionType.id}`,
+      );
+
+      const scheduleId = scheduleIdData.data.data[0].courseScheduleId;
+
+      if (!scheduleId) return;
+
+      await axios.delete(
+        `https://api.redclass.redberryinternship.ge/api/enrollments/${course?.enrollment?.id}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      const payload = {
+        courseId: course?.id,
+        courseScheduleId: scheduleId,
+        force: true,
+      };
+
+      const response = await axios.post(
+        "https://api.redclass.redberryinternship.ge/api/enrollments",
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      if (response.status === 201) {
+        handleSuccess({ name: response.data.data.course.title });
+      }
+
+      setCourse(response.data.data);
+      setTrigger((prev) => prev + 1);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data;
+        console.log(error);
+        console.log(data || error); // unknown error
+
+        if (data.conflicts) {
+          handleConflict(data.conflicts[0]);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     getFeaturedCourses();
-  }, [loggedIn]);
-  return (
+  }, [loggedIn, trigger]);
+
+  return !loading && course?.category ? (
     <>
       <div className="flex flex-col sticky w-225.75 shrink-0 h-fit gap-6 ">
         <div className="flex flex-col justify-between w-full h-fit gap-8">
-          <Breadcrumb categoryName={course?.category.name} />
+          <Breadcrumb
+            categoryName={
+              (course?.category && course?.category.name) || "Course"
+            }
+          />
           <div className="flex w-full items-center h-fit gap-4">
             <h1 className="w-fit h-fit text-center text-h1 text-grayscale-900">
               {course?.title}
@@ -166,7 +369,7 @@ function CourseInfo({ id }: { id: string }) {
                     </div>
                   </div>
                   <div className="flex justify-center items-center gap-1">
-                    <RatingFullStar className="w-6.5 h-6.5" />
+                    <RatingFullStar className="w-6.5 text-warning h-6.5" />
                     <h5 className="w-5.5 h-4.25 text-body-xs text-grayscale-600">
                       {course?.reviews?.length
                         ? (
@@ -211,11 +414,28 @@ function CourseInfo({ id }: { id: string }) {
         </div>
       </div>
       {course && course.enrollment === null ? (
-        <EnrollComponent priceData={course.basePrice} courseId={course.id} />
+        <EnrollComponent
+          setTrigger={setTrigger}
+          priceData={course.basePrice}
+          courseId={course.id}
+        />
       ) : (
-        course?.enrollment && "You already Enrolled"
+        course?.enrollment && (
+          <CourseTakenCard
+            handleCourseAction={
+              !course.enrollment.completedAt
+                ? handelCompleteCourse
+                : () => handleRetake({ force: false })
+            }
+            course={course}
+          />
+        )
       )}
     </>
+  ) : (
+    <div className="flex animate-spin text-blue-800 items-center justify-center w-full h-full">
+      <ImSpinner7 size={50} />
+    </div>
   );
 }
 

@@ -122,7 +122,7 @@ function ContinueLearningSection() {
         </div>
       </div>
       {loggedIn ? (
-        <div className="flex w-full overflow-y-visible  overflow-x-scroll gap-6 no-scrollbar justify-between">
+        <div className="flex w-full cursor-default select-none  overflow-x-scroll gap-2 no-scrollbar">
           {courses?.map((course) => (
             <CourseCardProgress
               key={course.id}

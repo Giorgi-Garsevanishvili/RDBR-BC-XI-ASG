@@ -142,9 +142,11 @@ const initialSessionData = [
 function EnrollComponent({
   courseId,
   priceData,
+  setTrigger,
 }: {
   courseId: number;
   priceData: number;
+  setTrigger: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [availableWeekDays, setAvailableWeekdays] = useState<
     AvailableWeekDaysType[]
@@ -366,6 +368,7 @@ function EnrollComponent({
               Slots={SessionComp}
             />
             <EnrollSummary
+              setTrigger={setTrigger}
               courseId={courseId}
               courseScheduleId={flowIdList.courseScheduleId}
               basePrice={priceData}

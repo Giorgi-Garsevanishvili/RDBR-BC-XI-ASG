@@ -66,12 +66,13 @@ function EnrolledCoursesSidebar() {
     EnrolledCoursesDataType[]
   >([]);
 
-  const {token} = useAuth()
+  const { token } = useAuth();
 
   const getEnrolledCourses = async () => {
     try {
       const data = await axios.get(
-        "https://api.redclass.redberryinternship.ge/api/enrollments", {headers: {Authorization: `Bearer ${token}`}}
+        "https://api.redclass.redberryinternship.ge/api/enrollments",
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setEnrolledCourses(data.data.data);
@@ -89,18 +90,20 @@ function EnrolledCoursesSidebar() {
   }, []);
 
   return (
-    <div className="w-198.5 right-0  absolute flex top-0 overflow-hidden h-313.5 bg-grayscale-100 flex-col  overflow-y-auto transition-all ease-out duration-300">
+    <div className="w-198.5 right-0  absolute flex top-0 overflow-hidden h-full bg-grayscale-100 flex-col  overflow-y-auto transition-all ease-out duration-300">
       <div className="w-198.5 fixed z-4 h-21.5 flex gap-50.5 items-end justify-center bg-grayscale-100">
         <p className="w-81.75 h-11 text-grayscale-950 font-semibold text-[40px] tracking-[-0.005em] leading-11 font-[inter]">
           Enrolled Courses
         </p>
-        <p className="w-37.75 h-6.25 flex  text-grayscale-950 font-medium text-[16px] leading-6 font-[inter]">
+        <p className="w-fit h-6.25 flex  text-grayscale-950 font-medium text-[16px] leading-6 font-[inter]">
           Total Enrollments
-          <span className="font-semibold pl-1 flex leading-6.25">0</span>
+          <span className="font-semibold pl-1 flex leading-6.25">
+            {enrolledCourses.length}
+          </span>
         </p>
       </div>
       {enrolledCourses?.length > 0 ? (
-        <div className="flex absolute top-30.75 left-[73.5] pb-16 flex-col items-center justify-center w-fit h-fit gap-3">
+        <div className="flex absolute top-30.75 left-[73.5] flex-col pb-4 items-center justify-between w-fit h-fit gap-3">
           {enrolledCourses.map((course) => (
             <EnrolledCard course={course} key={course.id} />
           ))}

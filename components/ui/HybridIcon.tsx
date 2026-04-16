@@ -3,9 +3,9 @@ import React from "react";
 function HybridIcon({ className }: { className: string }) {
   return (
     <svg
-      viewBox="0 0 23 23"
-      fill="none"
       className={className}
+      viewBox="0 0 21 21"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

@@ -17,6 +17,7 @@ import ModalUserIcon from "../ui/ModalUserIcon";
 import CTA_Button_Outlined from "./CTA_Button_Outlined";
 import SuccessIcon from "../ui/SuccessIcon";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import DefaultCheckIcon from "../ui/DefaultCheckIcon";
 
 export type UserUpdateType = {
   full_name: string;
@@ -436,7 +437,7 @@ function MyProfileComponent() {
                     name="email"
                     type="text"
                     value={user.email}
-                    Icon={CheckIcon}
+                    Icon={DefaultCheckIcon}
                     disabled
                   />
                   <div className="flex  w-full gap-2">

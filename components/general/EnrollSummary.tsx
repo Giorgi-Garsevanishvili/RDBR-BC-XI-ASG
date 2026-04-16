@@ -35,12 +35,14 @@ function EnrollSummary({
   step,
   courseId,
   courseScheduleId,
+  setTrigger,
 }: {
   basePrice: number;
   sessionType: string | null;
   step: number;
   courseId: number;
   courseScheduleId: number | null;
+  setTrigger: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [extraPrice, setExtraPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -142,6 +144,7 @@ function EnrollSummary({
         handleSuccess({ name: response.data.data.course.title });
       }
 
+      setTrigger((prev) => prev + 1);
       setEnrollData(initialEnrollData);
     } catch (error) {
       if (axios.isAxiosError(error)) {

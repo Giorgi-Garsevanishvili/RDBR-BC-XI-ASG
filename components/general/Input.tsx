@@ -29,7 +29,7 @@ function Input({
   value?: string | number;
   error?: string;
   disabled?: boolean;
-  Icon?: React.ComponentType;
+  Icon?: React.ComponentType | React.ElementType;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => void;

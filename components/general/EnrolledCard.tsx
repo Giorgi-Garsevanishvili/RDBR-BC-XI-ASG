@@ -36,7 +36,7 @@ function EnrolledCard({ course }: { course: EnrolledCoursesDataType }) {
               </h4>
 
               <div className="flex justify-center items-center gap-1">
-                <RatingFullStar className="" />
+                <RatingFullStar className="w-4.5 text-warning h-4.5" />
                 <h5 className="w-5.5 h-4.25 text-body-xs text-grayscale-600">
                   {course.course.avgRating > 0 ? course.course.avgRating : 0}
                 </h5>
@@ -60,26 +60,22 @@ function EnrolledCard({ course }: { course: EnrolledCoursesDataType }) {
               </div>
               <div className="flex w-full justify-start items-center h-fit gap-2">
                 {course.schedule.sessionType.name === "online" ? (
-                  <OnlineDesktopIcon className="w-4 h-4" />
+                  <OnlineDesktopIcon className="w-3.5  text-grayscale-600 h-3.5" />
                 ) : course.schedule.sessionType.name === "hybrid" ? (
-                  <HybridIcon className="w-4 h-4" />
+                  <HybridIcon className="w-4 text-grayscale-600 h-4" />
                 ) : (
-                  <PersonsIcon className="w-4 h-4" />
+                  <PersonsIcon className="w-4  text-grayscale-600 h-4" />
                 )}
 
-                <p className="w-fit h-6.5 leading-6.5 text-grayscale-500 text-helper-md-regular">
-                  {course.schedule.sessionType.name}
+                <p className="w-fit h-6.5 capitalize leading-6.5 text-grayscale-500 text-helper-md-regular">
+                  {course.schedule.sessionType.name.replace("_", " ")}
                 </p>
               </div>
               <div className="flex w-full justify-start items-center h-fit gap-2">
-                {course.schedule.location && (
-                  <>
-                    <LocationPinIcon className="w-4 h-4" />
-                    <p className="w-fit h-6.5 leading-6.5 text-grayscale-500 text-helper-md-regular">
-                      {course.schedule.location}
-                    </p>
-                  </>
-                )}
+                <LocationPinIcon className="w-4 h-4" />
+                <p className="w-fit h-6.5 leading-6.5 text-grayscale-500 text-helper-md-regular">
+                  {course.schedule.location || "No Specified Location"}
+                </p>
               </div>
             </div>
           </div>
@@ -92,7 +88,7 @@ function EnrolledCard({ course }: { course: EnrolledCoursesDataType }) {
                 {course.progress}% Completed
               </h4>
               <div className="w-110.5 relative rounded-[30px] h-3.75">
-                <div className="flex w-[283.33px] absolute  z-2 h-[15.13px] rounded-[30px] bg-[#4F46E5]"></div>
+                <div className={`${course.progress < 100 ? "w-[283.33px]" : "w-full"} flex  absolute  z-2 h-[15.13px] rounded-[30px] bg-[#4F46E5]`}></div>
                 <div className="w-full rounded-[30px]  z-1 h-[15.13px] absolute gap-2.5 bg-[#DDDBFA]"></div>
               </div>
             </div>
