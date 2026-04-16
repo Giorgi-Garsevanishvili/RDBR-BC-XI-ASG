@@ -8,13 +8,20 @@ import LocationPinIcon from "../ui/LocationPinIcon";
 import HybridIcon from "../ui/HybridIcon";
 import { EnrolledCoursesDataType } from "./EnrolledCoursesSidebar";
 import OnlineDesktopIcon from "../ui/OnlineDesktopIcon";
+import { redirect } from "next/navigation";
+import { useModal } from "@/context/ModalContext";
 
 function EnrolledCard({ course }: { course: EnrolledCoursesDataType }) {
+  const { closeModal } = useModal();
+  const handleViewCourse = () => {
+    closeModal();
+    redirect(`/browse/${course.course.id}`);
+  };
   return (
     <div className="flex flex-col w-155.75 border-[0.5px] border-transparent hover:border-[#B7B3F4] hover:shadow-[0px_0px_10px_0px_#8A82D440] active:border active:border-[#958FEF] active:shadow-[0px_0px_35px_0px_#8A82D440] bg-grayscale-50 transition-all ease-out duration-300 rounded-xl p-5 gap-4.5">
       <div className="flex flex-col gap-4 w-full">
         <div className="flex w-full gap-4.5">
-          <div className="w-[269px] h-[191px]  shrink-0 relative gap-2.5">
+          <div className="w-67.25 h-47.75  shrink-0 relative gap-2.5">
             <Image
               src={course.course.image}
               alt="Course Image"
@@ -65,10 +72,14 @@ function EnrolledCard({ course }: { course: EnrolledCoursesDataType }) {
                 </p>
               </div>
               <div className="flex w-full justify-start items-center h-fit gap-2">
-                <LocationPinIcon className="w-4 h-4" />
-                <p className="w-fit h-6.5 leading-6.5 text-grayscale-500 text-helper-md-regular">
-                  {course.schedule.location}
-                </p>
+                {course.schedule.location && (
+                  <>
+                    <LocationPinIcon className="w-4 h-4" />
+                    <p className="w-fit h-6.5 leading-6.5 text-grayscale-500 text-helper-md-regular">
+                      {course.schedule.location}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -77,17 +88,18 @@ function EnrolledCard({ course }: { course: EnrolledCoursesDataType }) {
         <div className="flex w-full gap-5">
           <div className="flex w-full h-full items-center justify-between">
             <div className="flex flex-col w-full pl-1 gap-2">
-              <h4 className="w-[442px] h-4 text-body-sm flex items-center leading-6 text-gray-900">
+              <h4 className="w-110.5 h-4 text-body-sm flex items-center leading-6 text-gray-900">
                 {course.progress}% Completed
               </h4>
-              <div className="w-[442px] relative rounded-[30px] h-[15px]">
+              <div className="w-110.5 relative rounded-[30px] h-3.75">
                 <div className="flex w-[283.33px] absolute  z-2 h-[15.13px] rounded-[30px] bg-[#4F46E5]"></div>
                 <div className="w-full rounded-[30px]  z-1 h-[15.13px] absolute gap-2.5 bg-[#DDDBFA]"></div>
               </div>
             </div>
             <CTA_Button_Outlined
+              action={() => handleViewCourse()}
               title="View"
-              className="w-[117px] shrink-0 h-[48px]"
+              className="w-29.25 shrink-0 h-12 items-center justify-center flex"
             />
           </div>
         </div>

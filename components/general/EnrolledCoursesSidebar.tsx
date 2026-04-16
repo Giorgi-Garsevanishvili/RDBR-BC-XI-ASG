@@ -3,6 +3,7 @@ import EmptyEnrollment from "./EmptyEnrollment";
 import EnrolledCard from "./EnrolledCard";
 import axios from "axios";
 import HybridIcon from "../ui/HybridIcon";
+import { useAuth } from "@/context/AuthContext";
 
 export type EnrolledCoursesDataType = {
   id: number;
@@ -65,10 +66,12 @@ function EnrolledCoursesSidebar() {
     EnrolledCoursesDataType[]
   >([]);
 
+  const {token} = useAuth()
+
   const getEnrolledCourses = async () => {
     try {
       const data = await axios.get(
-        "https://api.redclass.redberryinternship.ge/api/enrollments",
+        "https://api.redclass.redberryinternship.ge/api/enrollments", {headers: {Authorization: `Bearer ${token}`}}
       );
 
       setEnrolledCourses(data.data.data);
@@ -86,7 +89,7 @@ function EnrolledCoursesSidebar() {
   }, []);
 
   return (
-    <div className="w-198.5 right-0  absolute flex top-0 h-313.5 bg-grayscale-100 flex-col overflow-hidden overflow-y-auto transition-all ease-out duration-300">
+    <div className="w-198.5 right-0  absolute flex top-0 overflow-hidden h-313.5 bg-grayscale-100 flex-col  overflow-y-auto transition-all ease-out duration-300">
       <div className="w-198.5 fixed z-4 h-21.5 flex gap-50.5 items-end justify-center bg-grayscale-100">
         <p className="w-81.75 h-11 text-grayscale-950 font-semibold text-[40px] tracking-[-0.005em] leading-11 font-[inter]">
           Enrolled Courses
@@ -97,7 +100,7 @@ function EnrolledCoursesSidebar() {
         </p>
       </div>
       {enrolledCourses?.length > 0 ? (
-        <div className="flex absolute top-30.75 left-[73.5] flex-col items-center justify-center w-fit h-fit gap-3">
+        <div className="flex absolute top-30.75 left-[73.5] pb-16 flex-col items-center justify-center w-fit h-fit gap-3">
           {enrolledCourses.map((course) => (
             <EnrolledCard course={course} key={course.id} />
           ))}
