@@ -96,7 +96,7 @@ function ContinueLearningSection() {
     getEnrolledCourses();
   }, []);
 
-  return loggedIn && !courses ? null : (
+  return loggedIn && courses?.length === 0 ? null : (
     <section className="h-92.25 w-391.5 items-center flex flex-col gap-8">
       <div className="flex flex-col w-full pl-px gap-2.5">
         <div className="flex relative w-full">

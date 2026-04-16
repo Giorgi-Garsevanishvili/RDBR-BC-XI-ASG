@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import PackageOpenIcon from "../ui/PackageOpenIcon";
 import CTA_Button from "./CTA_Button";
+import { redirect } from "next/navigation";
+import { useModal } from "@/context/ModalContext";
 
 function EmptyEnrollment() {
+  const { closeModal } = useModal();
+  const handleClose = () => {
+    closeModal();
+    redirect("/browse");
+  };
+
   return (
     <div className="flex justify-center items-center flex-col h-219 gap-8 w-full">
       <div className="w-md h-fit gap-1 items-center justify-center">
@@ -23,7 +31,12 @@ function EmptyEnrollment() {
               </div>
             </div>
           </div>
-          <CTA_Button type="button" className="" title="Browse Courses" />
+          <CTA_Button
+            action={() => handleClose()}
+            type="button"
+            className=""
+            title="Browse Courses"
+          />
         </div>
       </div>
     </div>
